@@ -1,0 +1,100 @@
+.error-message{
+    color:red;
+    font-size:12px;
+    margin-top:5px;
+    font-style: italic;
+}
+
+input::placeholder{
+    font-size:13px;
+}
+
+.mb20{
+    margin-bottom: 20px;
+}
+
+.mt20{
+    margin-top: 20px;
+}
+
+h5{
+    text-transform: uppercase;
+    font-weight: normal;
+}
+
+table .image{
+    height: 73px;
+    display: block;
+}
+
+.img-cover img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+table strong{
+    min-width: 88px;
+    display: inline-block;
+}
+
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td{
+    vertical-align: middle;
+}
+
+.uk-flex-space-between{
+    -ms-flex-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+}
+
+.uk-flex-space-middle{
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+.uk-flex{
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+}
+
+.filter .perpage{
+    display: inline-block;
+}
+
+.btn{
+    margin-left: 5px;
+    margin-bottom: 0;
+    font-size: 13px;
+    border-radius: 0;
+    height: 32px;
+}
+
+.filter-wrapper{
+    margin-bottom: 10px;
+}
+
+.filter-wrapper .perpage{
+    display: inline-block;
+}
+
+.filter-wrapper .form-control{
+    height: 32px;
+    max-width: 200px;
+    font-size: 13px;
+}
+
+.mr5{
+    margin-right: 5px;
+}
+
+.mr10{
+    margin-right: 5px;
+}

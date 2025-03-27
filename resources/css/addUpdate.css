@@ -1,0 +1,29 @@
+.form-horizontal .form-group {
+    margin-bottom: 20px;
+}
+.form-horizontal .control-label {
+    font-weight: 600;
+}
+.form-horizontal .form-control {
+    border-radius: 5px;
+    box-shadow: none;
+    transition: border-color 0.3s ease;
+}
+.form-horizontal .form-control:focus {
+    border-color: #1ab394;
+    box-shadow: 0 0 5px rgba(26, 179, 148, 0.3);
+}
+.text-danger {
+    font-size: 0.9em;
+    margin-top: 5px;
+    display: block;
+}
+.btn-primary {
+    background-color: #1ab394;
+    border-color: #1ab394;
+    transition: background-color 0.3s ease;
+}
+.btn-primary:hover {
+    background-color: #179d82;
+    border-color: #179d82;
+}

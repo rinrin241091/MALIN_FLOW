@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'Cài đặt' => 'Settings',
+    'Chỉnh sửa hồ sơ' => 'Edit Profile',
+    'Tên' => 'Name',
+    'Email' => 'Email',
+    'Ảnh đại diện' => 'Profile Picture',
+    'Lưu' => 'Save',
+    'Đổi mật khẩu' => 'Change Password',
+    'Mật khẩu hiện tại' => 'Current Password',
+    'Mật khẩu mới' => 'New Password',
+    'Xác nhận mật khẩu mới' => 'Confirm New Password',
+    'Ngôn ngữ' => 'Language',
+    'Chọn ngôn ngữ' => 'Select Language',
+    'Tiếng Việt' => 'Vietnamese',
+    'Tiếng Anh' => 'English',
+    'Quyền riêng tư' => 'Privacy',
+    'Nhận thông báo qua email' => 'Receive notifications via email',
+    'Quay lại' => 'Back',
+    'Thông tin đã được cập nhật thành công!' => 'Information updated successfully!',
+    'Mật khẩu hiện tại không đúng.' => 'Current password is incorrect.',
+    'Mật khẩu đã được thay đổi thành công!' => 'Password changed successfully!',
+    'Ngôn ngữ đã được thay đổi thành công!' => 'Language changed successfully!',
+    'Cài đặt quyền riêng tư đã được cập nhật!' => 'Privacy settings updated successfully!',
+];
