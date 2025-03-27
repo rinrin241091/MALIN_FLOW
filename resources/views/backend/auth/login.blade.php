@@ -6,115 +6,86 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>LARAVEL </title>
+    <title>MALIN FLOW| Login</title>
 
     <link href="backend/css/bootstrap.min.css" rel="stylesheet">
     <link href="backend/font-awesome/css/font-awesome.css" rel="stylesheet">
-
     <link href="backend/css/animate.css" rel="stylesheet">
     <link href="backend/css/style.css" rel="stylesheet">
-    <link href="backend/css/customize.css" rel="stylesheet">
+    <link href="backend/css/custom.css" rel="stylesheet">
+
 
 </head>
 
 <body class="gray-bg">
 
-    <div class="loginColumns animated fadeInDown">
-        <div class="row">
+    <div class="middle-box text-center loginscreen animated fadeInDown">
+        <div>
+            <div>
 
-            <div class="col-md-6">
-                <h2 class="font-bold">Welcome to BPO.MP</h2>
-
-                <p>
-                    Perfectly designed and precisely prepared admin theme with over 50 pages with extra new web app views.
-                </p>
-
-                <p>
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-                </p>
-
-                <p>
-                    When an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                </p>
-
-                <p>
-                    <small>It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</small>
-                </p>
+                <h1 class="logo-name">BPO</h1>
 
             </div>
-            <div class="col-md-6">
-                <div class="ibox-content">
-                    <!-- Hiển thị thông báo lỗi từ session -->
-                    @if (session('error'))
-                        <div class="alert alert-danger" role="alert">
-                            {{ session('error') }}
-                        </div>
-                    @endif
+            <h3>Hệ thống quản lý chỉnh lý tài liệu</h3>
+            
+            <h4>ĐĂNG NHẬP HỆ THỐNG</h4>
 
-                    <!-- Hiển thị thông báo thành công từ session -->
-                    @if (session('success'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-                    <form method="post" class="m-t" role="form" action="{{route('auth.login')}}">
-                        @csrf
-                        <div class="form-group">
-                            <input 
-                                type="text"
-                                name="email" 
-                                class="form-control" 
-                                placeholder="Email" 
-                                value="{{old('email')}}"
-                            >
-                        @if ($errors->has('email'))
-                            <span class="error-message">*
-                            {{
-                                $errors->first('email') 
-                            }}</span>
-                        @endif
-                        </div>
-                        <div class="form-group">
-                            <input 
-                                type="password"
-                                name="password" 
-                                class="form-control" 
-                                placeholder="Password" 
-                            >
-                        @if ($errors->has('password'))
-                            <span class="error-message">*
-                            {{
-                                $errors->first('password') 
-                            }}</span>
-                        @endif
-                        </div>
-                        <button type="submit" class="btn btn-primary block full-width m-b">Đăng nhập</button>
-
-                        <a href="#">
-                            <small>Forgot password?</small>
-                        </a>
-
-                        <p class="text-muted text-center">
-                            <small>Do not have an account?</small>
-                        </p>
-                        <a class="btn btn-sm btn-white btn-block" href="{{route('auth.register')}}">Create an account</a>
-                    </form>
-                    <p class="m-t">
-                        <small>Laravel we app framework base on Bootstrap 3 &copy; 2025</small>
-                    </p>
+            <!-- Hiển thị thông báo lỗi từ session -->
+            @if (session('error'))
+                <div class="alert alert-danger" role="alert">
+                    {{ session('error') }}
                 </div>
-            </div>
-        </div>
-        <hr/>
-        <div class="row">
-            <div class="col-md-6">
-                BPO.MP Company
-            </div>
-            <div class="col-md-6 text-right">
-               <small>© 2025-2026</small>
-            </div>
+            @endif
+
+            <!-- Hiển thị thông báo thành công từ session -->
+            @if (session('success'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            <form  method="post" class="m-t" role="form" action="{{route('auth.login')}}">
+                @csrf
+                <div class="form-group">
+                    <input 
+                        name="email" 
+                        type="text" 
+                        class="form-control" 
+                        placeholder="Email người dùng" 
+                        value="{{old('email')}}" 
+                    >
+                    @if ($errors->has('email'))
+                        <p class="error-mess">
+                            {{ $errors->first('email') }}
+                        </p>
+                    @endif
+                   
+                </div>
+               
+                <div class="form-group">
+                    <input 
+                        name="password" 
+                        type="password" 
+                        class="form-control" 
+                        placeholder="Mật khẩu" 
+                    >
+                    @if ($errors->has('password'))
+                        <p class="error-mess">
+                            {{ $errors->first('password') }}
+                        </p>
+                    @endif
+                </div>
+                <button type="submit" class="btn btn-primary block full-width m-b">Đăng nhập</button>
+
+                <a href="#"><small>Quên mật khẩu?</small></a>
+            </form>
+            <p class="m-t"> <small>Bản quyền thuộc công ty BPO&copy; 2025</small> </p>
         </div>
     </div>
+
+    <!-- Mainly scripts -->
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 
 </body>
 

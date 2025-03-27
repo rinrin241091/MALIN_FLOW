@@ -46,9 +46,6 @@ Route::put('user/update/{id}', [UserController::class, 'update'])->name('user.up
 //Xóa thành viên
 Route::delete('user/{id}', [UserController::class, 'destroy'])->name('user.destroy')->middleware('auth', 'role:admin');
 
-//Đăng ký
-Route::get('register', [AuthController::class, 'register'])->name('auth.register');
-Route::post('register', [AuthController::class, 'registerStore'])->name('auth.registerStore');
 
 // Profile routes
 Route::get('settings', [UserController::class, 'settings'])->name('settings')->middleware('auth');

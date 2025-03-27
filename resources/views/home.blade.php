@@ -38,7 +38,6 @@
                 <div class="d-flex align-items-center">
                     @guest
                     <a href="{{ route('auth.admin') }}" class="btn btn-outline-primary me-2">Đăng nhập</a>
-                    <a href="{{ route('auth.register') }}" class="btn btn-primary">Đăng ký</a>
                     @else
                         <!-- Dropdown menu cho người dùng đã đăng nhập -->
                         <div class="dropdown">
@@ -77,7 +76,9 @@
         <div class="container">
             <h1 class="display-4 fw-bold">Quản lý tài liệu thông minh với MALIN FLOW</h1>
             <p class="lead my-4">Số hóa và tự động hóa quy trình chỉnh lý tài liệu, giúp tiết kiệm thời gian, chi phí và nâng cao hiệu quả quản lý.</p>
-            <a href="{{ route('auth.register') }}" class="btn btn-primary btn-lg">Dùng thử ngay</a>
+            @guest
+                <a href="{{ route('auth.login') }}" class="btn btn-primary">Dùng thử ngay</a>
+            @endguest
         </div>
     </section>
 
@@ -192,9 +193,11 @@
     <!-- CTA Section -->
     <section class="cta-section text-center py-5 bg-primary text-white">
         <div class="container">
-            <h2 class="mb-4">Sẵn sàng số hóa tài liệu của bạn?</h2>
-            <p class="lead mb-4">Dùng thử MALIN FLOW ngay hôm nay để trải nghiệm giải pháp quản lý tài liệu tối ưu!</p>
-            <a href="/register" class="btn btn-light btn-lg">Dùng thử miễn phí</a>
+            @guest
+                <h2 class="mb-4">Sẵn sàng số hóa tài liệu của bạn?</h2>
+                <p class="lead mb-4">Dùng thử MALIN FLOW ngay hôm nay để trải nghiệm giải pháp quản lý tài liệu tối ưu!</p>
+                <a href="/register" class="btn btn-light btn-lg">Dùng thử miễn phí</a>
+            @endguest
         </div>
     </section>
 
@@ -205,8 +208,8 @@
                 <div class="col-md-4">
                     <h5>MALIN FLOW</h5>
                     <p>Giải pháp quản lý tài liệu thông minh cho doanh nghiệp hiện đại.</p>
-                    <p>Email: support@malinflow.com</p>
-                    <p>Phone: +84 123 456 789</p>
+                    <p>Email: tudangm10@gmail.com</p>
+                    <p>Phone: 0347259766</p>
                 </div>
                 <div class="col-md-4">
                     <h5>Liên kết nhanh</h5>
@@ -219,7 +222,7 @@
                 </div>
                 <div class="col-md-4">
                     <h5>Kết nối với chúng tôi</h5>
-                    <a href="#" class="text-white me-2"><i class="fab fa-facebook fa-2x"></i></a>
+                    <a href="https://www.facebook.com/tu.ang.282472/" class="text-white me-2"><i class="fab fa-facebook fa-2x"></i></a>
                     <a href="#" class="text-white me-2"><i class="fab fa-linkedin fa-2x"></i></a>
                     <a href="#" class="text-white"><i class="fab fa-twitter fa-2x"></i></a>
                 </div>

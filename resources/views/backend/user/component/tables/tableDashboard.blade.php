@@ -19,7 +19,7 @@
         </thead>
         <tbody>
             @if(@isset($users) && is_object($users) && $users->count() > 0)
-                @foreach($users as $user)
+                @foreach($users as $key => $user)
                     <tr>
                         <td>
                             <input type="checkbox" name="user_ids[]" value="{{ $user->id }}" class="input-checkbox checkBoxItem"> 

@@ -50,30 +50,4 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
         return redirect()->route('auth.admin');
     }
-    public function register()
-    {
-        return view('backend.auth.register');   
-    }
-    public function registerStore(Request $request)
-    {
-        // Validate the request
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'terms' => 'required|accepted',
-        ]);
-        
-        // Create a new user
-        $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = $request->password;
-
-        // Gán vai trò user
-        $user->assignRole('user');
-        
-        $user->save();
-        return redirect()->route('auth.register')->with('success', 'Đăng ký thành công');
-    }
 }
