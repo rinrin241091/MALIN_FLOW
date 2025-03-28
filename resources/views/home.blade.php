@@ -98,11 +98,13 @@
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 text-center">
-                        <div class="card-body">
-                            <i class="fas fa-tags fa-3x mb-3 text-primary"></i>
-                            <h5 class="card-title">Quản lý danh mục</h5>
-                            <p class="card-text">Tự động gán mã định danh theo quy định Bộ Nội Vụ.</p>
-                        </div>
+                        <a href="{{ route('category.index') }}">
+                            <div class="card-body">
+                                <i class="fas fa-tags fa-3x mb-3 text-primary"></i>
+                                <h5 class="card-title">Quản lý danh mục</h5>
+                                <p class="card-text">Tự động gán mã định danh theo quy định Bộ Nội Vụ.</p>
+                            </div>
+                        </a>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">

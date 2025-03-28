@@ -27,7 +27,7 @@
                         <td>
                             {{ ($users->currentPage() - 1) * $users->perPage() + $key + 1 }}
                         <td>
-                            <img src="{{ asset('storage/' . $user->image) }}" alt="User Avatar">
+                            <img src="/{{ $user->image }}" alt="User Avatar" class="avatar-img">
                         </td>
                         <td>
                             {{$user->name}}

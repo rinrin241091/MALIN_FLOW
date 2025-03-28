@@ -65,7 +65,8 @@ class User extends Authenticatable
     }
 
     //true nếu người dùng có tương tác trong vòng 5 phút qua
-    public function isOnline() {
+    public function isOnline() 
+    {
         return $this->last_activity && Carbon::parse($this->last_activity)->diffInMinutes(Carbon::now()) <= 5;
     }
 }

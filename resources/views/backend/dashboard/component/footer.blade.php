@@ -3,6 +3,6 @@
         10GB of <strong>250GB</strong> Free.
     </div>
     <div>
-        <strong>Copyright</strong> Example Company &copy; 2014-2017
+        <strong>Copyright</strong> Bản quyền thuộc công ty BPO &copy; 2025
     </div>
 </div>

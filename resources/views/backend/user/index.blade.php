@@ -1,3 +1,6 @@
+<head>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+</head>
 <div class = "row wrapper border-bottom white-bg page-heading">
     <div class = "col-lg-8">
         <h2>{{config('apps.user.title')}}</h2>6

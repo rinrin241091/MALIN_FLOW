@@ -11,7 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
+        // Tạo bảng categories để lưu trữ danh mục
+        Schema::create('categories', function (Blueprint $table) 
+        {
             $table->id();
             $table->string('name');
             $table->string('type');
@@ -26,6 +28,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Xóa bảng categories khi rollback migration
         Schema::dropIfExists('categories');
     }
 };

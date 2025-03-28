@@ -30,9 +30,10 @@ class AuthController extends Controller
         $user = User::where('email', $credentials['email'])->first();
         $salt = env('PASSWORD_SALT', 'your-secret-salt');
     
-        if ($user && md5($credentials['password'] . $salt) === $user->password) {
+        if ($user && md5($credentials['password'] . $salt) === $user->password) 
+        {
             Auth::login($user);
-    
+            
             // Chuyển hướng dựa trên vai trò
             if ($user->hasRole('admin')) {
                 return redirect()->route('dashboard.index')->with('success', 'Đăng nhập thành công');

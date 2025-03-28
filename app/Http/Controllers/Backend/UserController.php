@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-// use App\Services\Interfaces\UserServiceInterface as UserService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Services\UserService;
@@ -18,9 +17,12 @@ class UserController extends Controller
     {
         $this->userService = $userService;
     }
+
+    //Dashboard
     public function index(Request $request)
     {
-        if(!auth()->user()->hasPermissionTo('view user')){
+        if(!auth()->user()->hasPermissionTo('view user'))
+        {
             abort(403, 'Unauthorized action.');
         }
         // Lấy tham số từ request
@@ -38,7 +40,8 @@ class UserController extends Controller
             'users'
         ));
     }
-    private function config(){
+    private function config()
+    {
         return [
             'js' =>[
                 'backend/js/plugins/switchery/switchery.js'
@@ -52,7 +55,8 @@ class UserController extends Controller
     //Hiển thị form thêm thành viên
     public function create()
     {
-        if (!auth()->user()->hasPermissionTo('add user')) {
+        if (!auth()->user()->hasPermissionTo('add user')) 
+        {
             abort(403, 'Unauthorized action.');
         }
         return view('backend.user.addUser');
@@ -60,7 +64,8 @@ class UserController extends Controller
     //Xử lý thêm thành viên
     public function store(Request $request)
     {
-        if (!auth()->user()->hasPermissionTo('add user')) {
+        if (!auth()->user()->hasPermissionTo('add user')) 
+        {
             abort(403, 'Unauthorized action.');
         }
         //validate input
@@ -70,7 +75,7 @@ class UserController extends Controller
             'phone' =>'required',
             'password' =>'required|min:8|confirmed',
             'address' => 'required',
-            'image' => 'required|image'
+            'image' => 'nullable|image'
         ]);
 
         //Tạo người dùng mới
@@ -81,10 +86,12 @@ class UserController extends Controller
         $user->password = $request->password;
         $user->address = $request->address;
 
-        //Xử lý up ảnh
-        if($request->hasFile('image')){
-            $path = $request->file('image')->store('avatars','public');
-            $user->image = $path;
+        // Xử lý upload ảnh
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('avatars'), $filename);
+            $user->image = 'avatars/' . $filename;
         }
         $user->save();
         return redirect()->route('user.index')->with('success','Thành viên đã được thêm');
@@ -114,15 +121,18 @@ class UserController extends Controller
         $user = User::findOrFail($id);
     
         if ($request->hasFile('image')) {
-            if ($user->image && Storage::exists($user->image)) {
-                Storage::delete($user->image);
+            // Xóa ảnh cũ nếu có
+            if ($user->image && file_exists(public_path($user->image))) {
+                unlink(public_path($user->image));
             }
-            $path = $request->file('image')->store('public/users');
-            $validated['image'] = str_replace('public/', '', $path);
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('avatars'), $filename);
+            $validated['image'] = 'avatars/' . $filename;
         }
     
         if ($request->filled('password')) {
-            $validated['password'] = bcrypt($request->password);
+            $validated['password'] = md5($request->password);
         } else {
             unset($validated['password']);
         }
@@ -142,27 +152,36 @@ class UserController extends Controller
     //Xử lý xóa thành viên
     public function destroy($id)
     {
-        if (!auth()->user()->hasPermissionTo('delete user')) {
+        if (!auth()->user()->hasPermissionTo('delete user')) 
+        {
             abort(403, 'Unauthorized action.');
         }
     
         $user = User::find($id);
-        if (!$user) {
+        if (!$user) 
+        {
             return redirect()->route('user.index')->with('error', 'Thành viên không tồn tại');
         }
     
         // Ngăn xóa tài khoản admin
-        if ($user->is_admin) {
+        if ($user->is_admin) 
+        {
             return redirect()->route('user.index')->with('error', 'Không thể xóa tài khoản admin.');
         }
-    
+        
+        // Xóa ảnh nếu có
+        if ($user->image && file_exists(public_path($user->image))) {
+            unlink(public_path($user->image));
+        }
+
         $user->delete();
         return redirect()->route('user.index')->with('success', 'Thành viên đã được xóa');
     }
 
     public function settings()
     {
-        if (!auth()->user()->hasPermissionTo('view settings')) {
+        if (!auth()->user()->hasPermissionTo('view settings')) 
+        {
             abort(403, 'Unauthorized action.');
         }
         $user = Auth::user();
@@ -171,7 +190,8 @@ class UserController extends Controller
 
     public function updateProfile(Request $request)
     {
-        if (!auth()->user()->hasPermissionTo('update profile')) {
+        if (!auth()->user()->hasPermissionTo('update profile')) 
+        {
             abort(403, 'Unauthorized action.');
         }
         $user = Auth::user();
@@ -188,11 +208,13 @@ class UserController extends Controller
         // Xử lý upload ảnh đại diện
         if ($request->hasFile('image')) {
             // Xóa ảnh cũ nếu có
-            if ($user->image) {
-                Storage::delete('public/' . $user->image);
+            if ($user->image && file_exists(public_path($user->image))) {
+                unlink(public_path($user->image));
             }
-            $path = $request->file('image')->store('public/avatars');
-            $user->image = str_replace('public/', '', $path);
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('avatars'), $filename);
+            $user->image = 'avatars/' . $filename;
         }
 
         $user->save();
@@ -202,7 +224,8 @@ class UserController extends Controller
 
     public function changePassword(Request $request)
     {
-        if (!auth()->user()->hasPermissionTo('change password')) {
+        if (!auth()->user()->hasPermissionTo('change password')) 
+        {
             abort(403, 'Unauthorized action.');
         }
         $user = Auth::user();
@@ -212,7 +235,8 @@ class UserController extends Controller
         ]);
 
         // Kiểm tra mật khẩu hiện tại
-        if (md5($request->current_password) !== $user->password) {
+        if (md5($request->current_password) !== $user->password) 
+        {
             return redirect()->route('settings')->with('error', __('Mật khẩu hiện tại không đúng.'));
         }
 
@@ -225,7 +249,8 @@ class UserController extends Controller
 
     public function changeLanguage(Request $request)
     {
-        if (!auth()->user()->hasPermissionTo('change language')) {
+        if (!auth()->user()->hasPermissionTo('change language')) 
+        {
             abort(403, 'Unauthorized action.');
         }
         $request->validate([
@@ -243,7 +268,8 @@ class UserController extends Controller
 
     public function updatePrivacy(Request $request)
     {
-        if (!auth()->user()->hasPermissionTo('update privacy')) {
+        if (!auth()->user()->hasPermissionTo('update privacy')) 
+        {
             abort(403, 'Unauthorized action.');
         }
         $user = Auth::user();
@@ -261,14 +287,24 @@ class UserController extends Controller
     //Xóa hàng loạt trong table của dashboard
     public function bulkDelete(Request $request)
     {
-        if (!auth()->user()->hasPermissionTo('delete user')) {
+        if (!auth()->user()->hasPermissionTo('delete user')) 
+        {
             abort(403, 'Unauthorized action.');
         }
 
         $userIds = $request->input('user_ids', []);
 
-        if (empty($userIds)) {
+        if (empty($userIds)) 
+        {
             return redirect()->route('user.index')->with('error', 'Vui lòng chọn ít nhất một thành viên để xóa.');
+        }
+
+        // Xóa ảnh của các thành viên được chọn
+        $users = User::whereIn('id', $userIds)->get();
+        foreach ($users as $user) {
+            if ($user->image && file_exists(public_path($user->image))) {
+                unlink(public_path($user->image));
+            }
         }
 
         // Xóa các thành viên được chọn

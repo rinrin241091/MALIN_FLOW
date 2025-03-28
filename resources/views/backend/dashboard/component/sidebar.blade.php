@@ -3,7 +3,7 @@
         <ul class="nav metismenu" id="side-menu">
             <li class="nav-header">
                 <div class="avatar"> 
-                    <img alt="image" class="img-circle" src="{{ asset('public/backend/img/LOGO.webp') }}" />
+                    <img alt="image" class="img-circle" src="{{ asset('/LOGO/LOGO.png') }}" width="60" height="60"/>
                 </div>
                 <div class="logo-element">
                     MALIN FLOW

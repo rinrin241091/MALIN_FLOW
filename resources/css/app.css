@@ -39,8 +39,9 @@ footer a:hover {
     text-decoration: underline;
 }
 
-.avatar img.img-circle {
-    width: 50px; /* Điều chỉnh kích thước phù hợp */
-    height: 50px;
-    object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+.avatar-img {
+    width: 50px; /* Kích thước vừa phải, bạn có thể điều chỉnh */
+    height: 50px; /* Đảm bảo ảnh là hình vuông */
+    object-fit: cover; /* Cắt ảnh để vừa khung, không làm méo ảnh */
+    border-radius: 50%; /* Tùy chọn: Làm ảnh tròn */
 }

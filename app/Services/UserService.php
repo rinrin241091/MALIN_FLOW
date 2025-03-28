@@ -29,8 +29,10 @@ class UserService implements UserServiceInterface
         $query = User::query();
 
         // Lọc theo từ khóa nếu có
-        if ($keyword) {
-            $query->where(function ($q) use ($keyword) {
+        if ($keyword) 
+        {
+            $query->where(function ($q) use ($keyword) 
+            {
                 $q->where('name', 'like', "%{$keyword}%")
                   ->orWhere('email', 'like', "%{$keyword}%")
                   ->orWhere('phone', 'like', "%{$keyword}%");
