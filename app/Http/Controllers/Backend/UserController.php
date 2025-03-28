@@ -25,20 +25,24 @@ class UserController extends Controller
         {
             abort(403, 'Unauthorized action.');
         }
-        // Lấy tham số từ request
-        $perPage = $request->input('perpage', 20); // Mặc định 20 bản ghi mỗi trang
-        $keyword = $request->input('keyword');
-        
-        // Lấy danh sách thành viên với tìm kiếm và phân trang
-        $users = $this->userService->paginate($perPage, $keyword);
-
-        $config = $this->config();
-        $template = 'backend.user.index';
-        return view('backend.dashboard.layout', compact(
-            'template',
-            'config',
-            'users'
-        ));
+        try {
+            $perPage = $request->input('perpage', 20);
+            $keyword = $request->input('keyword');
+            $userCatalogueId = $request->input('user_catalogue_id', 0);
+    
+            $users = $this->userService->paginate($perPage, $keyword, $userCatalogueId);
+            $users->appends($request->query());
+    
+            $config = $this->config();
+            $template = 'backend.user.index';
+            return view('backend.dashboard.layout', compact(
+                'template',
+                'config',
+                'users'
+            ));
+        } catch (\Exception $e) {
+            return redirect()->route('dashboard.index')->with('error', 'Đã xảy ra lỗi khi lấy danh sách thành viên: ' . $e->getMessage());
+        }
     }
     private function config()
     {

@@ -40,8 +40,33 @@ footer a:hover {
 }
 
 .avatar-img {
-    width: 50px; /* Kích thước vừa phải, bạn có thể điều chỉnh */
-    height: 50px; /* Đảm bảo ảnh là hình vuông */
-    object-fit: cover; /* Cắt ảnh để vừa khung, không làm méo ảnh */
-    border-radius: 50%; /* Tùy chọn: Làm ảnh tròn */
+    width: 50px; 
+    height: 50px; 
+    object-fit: cover;
+    border-radius: 50%; 
+}
+
+.table-responsive {
+    margin-bottom: 20px;
+}
+.avatar-img {
+    border-radius: 50%;
+    object-fit: cover;
+}
+.summary {
+    margin: 10px 0;
+    font-style: italic;
+    color: #666;
+}
+.pagination {
+    justify-content: center;
+}
+.filter-wrapper .uk-flex {
+    align-items: center;
+}
+.mr10 {
+    margin-right: 10px;
+}
+.ml10 {
+    margin-left: 10px;
 }
