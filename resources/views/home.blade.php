@@ -98,7 +98,7 @@
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 text-center">
-                        <a href="{{ route('category.index') }}">
+                        <a href="aa.html">
                             <div class="card-body">
                                 <i class="fas fa-tags fa-3x mb-3 text-primary"></i>
                                 <h5 class="card-title">Quản lý danh mục</h5>

@@ -5,8 +5,6 @@ use App\Http\Controllers\Backend\AuthController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Middleware\AuthenticateMiddleware;
-use App\Http\Controllers\Backend\DocumentController;
-use App\Http\Controllers\Backend\CategoryController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -61,31 +59,4 @@ Route::post('settings/privacy', [UserController::class, 'updatePrivacy'])->name(
 Route::delete('user/bulk-delete', [UserController::class, 'bulkDelete'])->name('user.bulkDelete')->middleware('auth', 'role:admin');
 
 
-// Route cho danh sách danh mục
-Route::get('category/index', [CategoryController::class, 'index'])->name('category.index')->middleware('auth', 'role:admin');
 
-// Route cho trang tạo danh mục mới
-Route::get('category/create', [CategoryController::class, 'create'])->name('category.create')->middleware('auth', 'role:admin');
-Route::post('category/store', [CategoryController::class, 'store'])->name('category.store')->middleware('auth', 'role:admin');
-
-// Route cho trang chỉnh sửa danh mục
-Route::get('category/{id}/edit', [CategoryController::class, 'edit'])->name('category.edit')->middleware('auth', 'role:admin');
-Route::put('category/{id}', [CategoryController::class, 'update'])->name('category.update')->middleware('auth', 'role:admin');
-
-// Route để xóa danh mục
-Route::delete('category/{id}', [CategoryController::class, 'destroy'])->name('category.destroy')->middleware('auth', 'role:admin');
-
-
-// Route cho danh sách tài liệu
-Route::get('document/index', [DocumentController::class, 'index'])->name('document.index')->middleware('auth', 'role:admin');
-
-// Route cho trang tạo tài liệu mới
-Route::get('document/create', [DocumentController::class, 'create'])->name('document.create')->middleware('auth', 'role:admin');
-Route::post('document/store', [DocumentController::class, 'store'])->name('document.store')->middleware('auth', 'role:admin');
-
-// Route cho trang chỉnh sửa tài liệu
-Route::get('document/{id}/edit', [DocumentController::class, 'edit'])->name('document.edit')->middleware('auth', 'role:admin');
-Route::put('document/{id}', [DocumentController::class, 'update'])->name('document.update')->middleware('auth', 'role:admin');
-
-// Route để xóa tài liệu
-Route::delete('document/{id}', [DocumentController::class, 'destroy'])->name('document.destroy')->middleware('auth', 'role:admin');
