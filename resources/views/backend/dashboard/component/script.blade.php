@@ -4,7 +4,7 @@
 <script src="backend/js/plugins/metisMenu/jquery.metisMenu.js"></script>
 <script src="backend/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 <script src="backend/library/library.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/3.0.7/metisMenu.min.js"></script>
 <!-- Trong script.blade.php -->
 <script src="{{ asset('backend/js/bulk-actions.js') }}"></script>
 
@@ -42,3 +42,9 @@
         });
     </script>
 @endif
+
+<script>
+    $(document).ready(function () {
+        $('#side-menu').metisMenu();  
+    });
+</script>
