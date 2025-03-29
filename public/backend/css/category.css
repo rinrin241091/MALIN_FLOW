@@ -1,0 +1,115 @@
+    .wrapper {
+        padding: 20px;
+    }
+    .border-bottom {
+        border-bottom: 1px solid #e7eaec;
+    }
+    .white-bg {
+        background-color: #fff;
+    }
+    .page-heading {
+        padding: 15px 0;
+    }
+    .breadcrumb {
+        background: none;
+        padding: 0;
+        margin-bottom: 0;
+    }
+    .breadcrumb li {
+        display: inline;
+    }
+    .breadcrumb li a {
+        color: #676a6c;
+    }
+    .breadcrumb li.active strong {
+        color: #1ab394;
+    }
+    .wrapper-content {
+        padding: 20px;
+    }
+    .animated {
+        animation-duration: 1s;
+    }
+    .fadeInRight {
+        animation-name: fadeInRight;
+    }
+    @keyframes fadeInRight {
+        0% { opacity: 0; transform: translateX(20px); }
+        100% { opacity: 1; transform: translateX(0); }
+    }
+    .ibox {
+        margin-bottom: 20px;
+    }
+    .ibox-title {
+        background-color: #f5f5f5;
+        padding: 10px 15px;
+        border-bottom: 1px solid #e7eaec;
+    }
+    .ibox-title h5 {
+        margin: 0;
+        font-size: 14px;
+    }
+    .ibox-content {
+        padding: 15px;
+    }
+    .form-inline {
+        display: flex;
+        align-items: center;
+    }
+    .form-group {
+        margin-right: 10px;
+    }
+    .form-control {
+        width: 200px;
+        padding: 6px 12px;
+        border: 1px solid #e5e6e7;
+        border-radius: 3px;
+    }
+    .btn-primary {
+        background-color: #1ab394;
+        border-color: #1ab394;
+        color: #fff;
+        padding: 6px 12px;
+        border-radius: 3px;
+    }
+    .btn-danger {
+        background-color: #ed5565;
+        border-color: #ed5565;
+        color: #fff;
+        padding: 6px 12px;
+        border-radius: 3px;
+    }
+    .table-responsive {
+        overflow-x: auto;
+    }
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .table-striped tbody tr:nth-child(odd) {
+        background-color: #f9f9f9;
+    }
+    .table-bordered th,
+    .table-bordered td {
+        border: 1px solid #e7eaec;
+        padding: 8px;
+        text-align: center;
+    }
+    .btn-success {
+        background-color: #1c84c6;
+        border-color: #1c84c6;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 3px;
+    }
+    .btn-danger {
+        background-color: #ed5565;
+        border-color: #ed5565;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 3px;
+    }
+    .fa {
+        margin-right: 5px;
+    }
+    @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');

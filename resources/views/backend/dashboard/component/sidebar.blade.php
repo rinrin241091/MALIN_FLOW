@@ -18,7 +18,7 @@
                 </ul>
             </li>
             <li class="{{ request()->routeIs('category.*') ? 'active' : '' }}">
-                <a href="#"><i class="fa fa-list"></i> <span class="nav-label">Quản lý danh mục</span> <span class="fa arrow"></span></a>
+                <a href="{{ route('dashboard.index') }}"><i class="fa fa-list"></i> <span class="nav-label">Quản lý danh mục</span> <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse {{ request()->routeIs('category.*') ? 'in' : '' }}">
                     <li class="{{ request()->routeIs('category.fonds') ? 'active' : '' }}">
                         <a href="{{ route('category.fonds') }}">Phông chỉnh lý</a>

@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html>
-<header>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-</header>
 <head>
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     @include('backend.dashboard.component.head')
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ $title ?? 'Dashboard' }}</title> <!-- Hiển thị $title -->
 </head>
 
 <body>
@@ -15,7 +13,8 @@
         <div id="page-wrapper" class="gray-bg">
             @include('backend.dashboard.component.nav')
             @include($template)
-        @include('backend.dashboard.component.footer')
+            @yield('content')
+            @include('backend.dashboard.component.footer')
         </div>
     </div>
 

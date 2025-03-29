@@ -9,7 +9,11 @@
 <script src="{{ asset('backend/js/bulk-actions.js') }}"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+<script>
+    $(document).ready(function () {
+        $('#side-menu').metisMenu();  
+    });
+</script>
 <!-- jQuery UI -->
 <script src="backend/js/plugins/jquery-ui/jquery-ui.min.js"></script>
 @if(isset($config['js']) && is_array($config['js']))
@@ -17,6 +21,7 @@
         {!! '<script src="'.$val.'"></script>' !!}
     @endforeach
 @endif
+
 
 
 @if(session('success'))
@@ -42,9 +47,3 @@
         });
     </script>
 @endif
-
-<script>
-    $(document).ready(function () {
-        $('#side-menu').metisMenu();  
-    });
-</script>

@@ -23,14 +23,16 @@ class CategoryController extends Controller
                         ->orWhere('code', 'like', "%{$search}%");
         })->paginate(20);
 
-        $template = 'backend.category.fonds'; 
-        return view('backend.category.fonds', compact('fonds', 'template'));
+        $template = 'backend.category.fonds';
+        $title = 'Quản lý danh mục - Phông chỉnh lý'; // Thêm biến $title
+        return view('backend.dashboard.layout', compact('fonds', 'template', 'title'));
     }
 
     public function createFond()
     {
-        $template = 'backend.category.create_fond'; 
-        return view('backend.category.create_fond', compact('template'));
+        $template = 'backend.category.create_fond';
+        $title = 'Quản lý danh mục - Thêm mới phông chỉnh lý';
+        return view('backend.category.create_fond', compact('template', 'title'));
     }
 
     public function storeFond(Request $request)
@@ -64,14 +66,16 @@ class CategoryController extends Controller
 
         $fonds = Fond::all();
         $template = 'backend.category.categories';
-        return view('backend.category.categories', compact('categories', 'fonds', 'fond_id', 'template'));
+        $title = 'Quản lý danh mục - Danh mục tài liệu';
+        return view('backend.dashboard.layout', compact('categories', 'fonds', 'fond_id', 'template', 'title'));
     }
 
     public function createCategory()
     {
         $fonds = Fond::all();
-        $template = 'backend.category.create_category'; 
-        return view('backend.category.create_category', compact('fonds', 'template'));
+        $template = 'backend.category.create_category';
+        $title = 'Quản lý danh mục - Thêm mới danh mục tài liệu';
+        return view('backend.category.create_category', compact('fonds', 'template', 'title'));
     }
 
     public function storeCategory(Request $request)
@@ -106,15 +110,17 @@ class CategoryController extends Controller
         })->paginate(20);
 
         $fonds = Fond::all();
-        $template = 'backend.category.warehouses'; 
-        return view('backend.category.warehouses', compact('warehouses', 'fonds', 'fond_id', 'template'));
+        $template = 'backend.category.warehouses';
+        $title = 'Quản lý danh mục - Kho lưu trữ';
+        return view('backend.dashboard.layout', compact('warehouses', 'fonds', 'fond_id', 'template', 'title'));
     }
 
     public function createWarehouse()
     {
         $fonds = Fond::all();
-        $template = 'backend.category.create_warehouse'; 
-        return view('backend.category.create_warehouse', compact('fonds', 'template'));
+        $template = 'backend.category.create_warehouse';
+        $title = 'Quản lý danh mục - Thêm mới kho lưu trữ';
+        return view('backend.category.create_warehouse', compact('fonds', 'template', 'title'));
     }
 
     public function storeWarehouse(Request $request)
@@ -147,18 +153,21 @@ class CategoryController extends Controller
             return $query->where('name', 'like', "%{$search}%")
                         ->orWhere('code', 'like', "%{$search}%");
         })->when($warehouse_id, function ($query, $warehouse_id) {
-            return $query->where('warehouse_id', $warehouse_id);
+            return $query->where('warehouses_id', $warehouse_id);
         })->paginate(20);
 
         $warehouses = Warehouse::all();
-        $template = 'backend.category.shelves'; 
-        return view('backend.category.shelves', compact('shelves', 'warehouses', 'warehouse_id', 'template'));
+        $template = 'backend.category.shelves';
+        $title = 'Quản lý danh mục - Kệ trong kho';
+        return view('backend.dashboard.layout', compact('shelves', 'warehouses', 'warehouse_id', 'template', 'title'));
     }
+
     public function createShelf()
     {
         $warehouses = Warehouse::all();
-        $template = 'backend.category.create_shelf'; 
-        return view('backend.category.create_shelf', compact('warehouses', 'template'));
+        $template = 'backend.category.create_shelf';
+        $title = 'Quản lý danh mục - Thêm mới kệ trong kho';
+        return view('backend.category.create_shelf', compact('warehouses', 'template', 'title'));
     }
 
     public function storeShelf(Request $request)

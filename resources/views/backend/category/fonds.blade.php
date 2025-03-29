@@ -1,8 +1,7 @@
-@extends('backend.dashboard.layout')
-
-@section('title', 'Quản lý danh mục - Phông chỉnh lý')
-
-@section('content')
+<link rel="stylesheet" href="{{ asset('backend/css/category.css') }}">
+<link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <!-- Thêm CSS cho toastr -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
         <h2>Quản lý danh mục</h2>
@@ -92,4 +91,3 @@
         </div>
     </div>
 </div>
-@endsection

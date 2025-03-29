@@ -1,8 +1,4 @@
-@extends('backend.dashboard.layout')
-
-@section('title', 'Quản lý danh mục - Kho lưu trữ')
-
-@section('content')
+<link rel="stylesheet" href="{{ asset('backend/css/category.css') }}">
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
         <h2>Quản lý danh mục</h2>
@@ -109,4 +105,3 @@
         </div>
     </div>
 </div>
-@endsection
