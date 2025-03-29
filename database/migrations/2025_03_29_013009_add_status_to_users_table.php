@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) 
         {
-            $table->timestamp('last_activity')->nullable()->after('updated_at');
+            Schema::table('users', function (Blueprint $table) {
+                $table->boolean('status')->default(true)->after('address'); 
+            });
         });
     }
 
@@ -24,7 +26,9 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) 
         {
-            $table->dropColumn('last_activity');
+            Schema::table('users', function (Blueprint $table) {
+                $table->dropColumn('status');
+            });
         });
     }
 };

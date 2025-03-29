@@ -56,6 +56,24 @@ class UserController extends Controller
         ];
     }
 
+    //Active users
+    public function toggleStatus(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'status' => 'required|boolean', // Kiểm tra giá trị là boolean (0 hoặc 1)
+        ]);
+
+        $user = User::find($request->user_id);
+        $user->status = (bool) $request->status; // Chuyển thành boolean
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Cập nhật trạng thái thành công!'
+        ]);
+    }
+
     //Hiển thị form thêm thành viên
     public function create()
     {
@@ -316,4 +334,6 @@ class UserController extends Controller
 
         return redirect()->route('user.index')->with('success', 'Đã xóa các thành viên được chọn.');
     }
+
+    
 }

@@ -34,7 +34,7 @@ class User extends Authenticatable
         'user_agent',
         'ip',
         'receive_emails',
-        'last_activity',
+        'status'
     ];
 
     /**
@@ -62,11 +62,5 @@ class User extends Authenticatable
     {
         $salt = env('PASSWORD_SALT', 'your-secret-salt');
         $this->attributes['password'] = md5($value . $salt);
-    }
-
-    //true nếu người dùng có tương tác trong vòng 5 phút qua
-    public function isOnline() 
-    {
-        return $this->last_activity && Carbon::parse($this->last_activity)->diffInMinutes(Carbon::now()) <= 5;
     }
 }

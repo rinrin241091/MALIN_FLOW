@@ -14,7 +14,7 @@
                     <th class="text-center">Email</th>
                     <th class="text-center">Số điện thoại</th>
                     <th class="text-center">Địa chỉ</th>
-                    <th class="text-center">Trạng thái</th>
+                    <th class="text-center">Active-user</th>
                     <th class="text-center">Thao tác</th>
                 </tr>
             </thead>
@@ -48,7 +48,7 @@
                                 {{ $user->address }}
                             </td>
                             <td class="text-center"> 
-                                <input type="checkbox" class="js-switch" {{ $user->status ? 'checked' : '' }} disabled />
+                                <input type="checkbox" class="js-switch" {{ $user->status ? 'checked' : '' }} data-user-id="{{ $user->id }}" onchange="toggleUserStatus(this)" />
                             </td>
                             <td class="text-center"> 
                                 @can('edit user')
@@ -81,12 +81,69 @@
     @endcan
 </form>
 
-<!-- JavaScript để chọn tất cả checkbox -->
+</script>
+<!-- Thêm Switchery và SweetAlert2 -->
+<link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
+<script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- JavaScript -->
 <script>
+    document.querySelectorAll('.js-switch').forEach(function(element) {
+        new Switchery(element, { color: '#1ab394' });
+    });
+
+    // Chọn tất cả checkbox
     document.getElementById('checkAll').addEventListener('change', function() {
         let checkboxes = document.querySelectorAll('.checkBoxItem');
         checkboxes.forEach(checkbox => {
             checkbox.checked = this.checked;
         });
     });
+
+    // Hàm thay đổi trạng thái user
+    function toggleUserStatus(element) {
+        const userId = element.getAttribute('data-user-id');
+        const newStatus = element.checked ? 1 : 0; // true -> 1, false -> 0
+
+        Swal.fire({
+            title: 'Xác nhận',
+            text: `Bạn có chắc chắn muốn ${newStatus ? 'kích hoạt' : 'vô hiệu hóa'} tài khoản này?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Có',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch('{{ route('user.toggleStatus') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        status: newStatus
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire('Thành công!', data.message, 'success');
+                    } else {
+                        Swal.fire('Lỗi!', data.message, 'error');
+                        element.checked = !element.checked; // Hoàn tác nếu có lỗi
+                    }
+                })
+                .catch(error => {
+                    Swal.fire('Lỗi!', 'Có lỗi xảy ra khi cập nhật trạng thái.', 'error');
+                    element.checked = !element.checked; // Hoàn tác nếu có lỗi
+                });
+            } else {
+                element.checked = !element.checked; // Hoàn tác nếu người dùng hủy
+            }
+        });
+    }
 </script>

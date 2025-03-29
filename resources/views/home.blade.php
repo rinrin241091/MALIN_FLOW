@@ -43,7 +43,7 @@
                         <div class="dropdown">
                             <a class="dropdown-toggle d-flex align-items-center text-decoration-none" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                 @if (Auth::user()->image)
-                                    <img src="{{ asset('storage/' . Auth::user()->image) }}" alt="Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                                    <img src="{{ asset('avatars/' . Auth::user()->image) }}" alt="Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
                                 @else
                                     <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
                                         {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}

@@ -10,7 +10,7 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    public function __contstruct()
+    public function __construct()
     {
 
     }
@@ -32,6 +32,11 @@ class AuthController extends Controller
     
         if ($user && md5($credentials['password'] . $salt) === $user->password) 
         {
+            // Kiểm tra trạng thái user
+            if (!$user->status) { // status = false
+                return redirect()->route('auth.admin')->with('error', 'Tài khoản của bạn đã bị vô hiệu hóa. Vui lòng liên hệ admin để được hỗ trợ.');
+            }
+
             Auth::login($user);
             
             // Chuyển hướng dựa trên vai trò

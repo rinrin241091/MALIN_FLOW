@@ -31,32 +31,37 @@ Route::get('dashboard/index', [DashboardController::class, 'index'])->name('dash
 /*USER */
 Route::get('user/index', [UserController::class, 'index'])->name('user.index')->middleware('auth', 'role:admin');
 
+
 //Đăng nhập, đăng xuất
-Route::get('admin', [AuthController::class, 'index'])->name('auth.admin')->middleware('login');
-Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
-Route::post('login', [AuthController::class, 'login'])->name('auth.login');
+Route::prefix('auth')->group(function () {
+    Route::get('admin', [AuthController::class, 'index'])->name('auth.admin')->middleware('login');
+    Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
+    Route::post('login', [AuthController::class, 'login'])->name('auth.login');
+});
 
-//Thêm thành viên
-Route::get('user/create', [UserController::class, 'create'])->name('user.addUser')->middleware('auth', 'role:admin');
-Route::post('user/store', [UserController::class, 'store'])->name('user.store')->middleware('auth', 'role:admin');
 
-//Sửa thành viên
-Route::get('user/edit/{id}', [UserController::class, 'edit'])->name('user.edit')->middleware('auth', 'role:admin');
-Route::put('user/update/{id}', [UserController::class, 'update'])->name('user.update')->middleware('auth', 'role:admin');
-
-//Xóa thành viên
-Route::delete('user/{id}', [UserController::class, 'destroy'])->name('user.destroy')->middleware('auth', 'role:admin');
+//Quản lý thành viên
+Route::prefix('user')->group(function () {
+    Route::get('user/create', [UserController::class, 'create'])->name('user.addUser')->middleware('auth', 'role:admin');
+    Route::post('user/store', [UserController::class, 'store'])->name('user.store')->middleware('auth', 'role:admin');
+    Route::get('user/edit/{id}', [UserController::class, 'edit'])->name('user.edit')->middleware('auth', 'role:admin');
+    Route::put('user/update/{id}', [UserController::class, 'update'])->name('user.update')->middleware('auth', 'role:admin');
+    Route::delete('user/{id}', [UserController::class, 'destroy'])->name('user.destroy')->middleware('auth', 'role:admin');
+    Route::delete('user/bulk-delete', [UserController::class, 'bulkDelete'])->name('user.bulkDelete')->middleware('auth', 'role:admin');
+    Route::post('user/toggle-status', [App\Http\Controllers\Backend\UserController::class, 'toggleStatus'])->name('user.toggleStatus')->middleware('role:admin');
+});
 
 
 // Profile routes
-Route::get('settings', [UserController::class, 'settings'])->name('settings')->middleware('auth');
-Route::put('settings/update', [UserController::class, 'updateProfile'])->name('settings.update')->middleware('auth');
-Route::put('settings/password', [UserController::class, 'changePassword'])->name('settings.password')->middleware('auth');
-Route::post('settings/language', [UserController::class, 'changeLanguage'])->name('settings.language')->middleware('auth');
-Route::post('settings/privacy', [UserController::class, 'updatePrivacy'])->name('settings.privacy')->middleware('auth');
+Route::prefix('settings')->group(function () {
+    Route::get('settings', [UserController::class, 'settings'])->name('settings')->middleware('auth');
+    Route::put('settings/update', [UserController::class, 'updateProfile'])->name('settings.update')->middleware('auth');
+    Route::put('settings/password', [UserController::class, 'changePassword'])->name('settings.password')->middleware('auth');
+    Route::post('settings/language', [UserController::class, 'changeLanguage'])->name('settings.language')->middleware('auth');
+    Route::post('settings/privacy', [UserController::class, 'updatePrivacy'])->name('settings.privacy')->middleware('auth');
+});
 
-//Xóa hàng loạt trong table dashboards
-Route::delete('user/bulk-delete', [UserController::class, 'bulkDelete'])->name('user.bulkDelete')->middleware('auth', 'role:admin');
+
 
 
 

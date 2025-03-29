@@ -9,8 +9,9 @@
                     MALIN FLOW
                 </div>
             </li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('backend.home') }}">HOMEPAGE</a></li>
             <li class="active">
-                <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">Quản lý thành viên</span> <span class="fa arrow"></span></a>
+                <a href="javascript:void(0)"><i class="fa fa-th-large"></i> <span class="nav-label">Quản lý thành viên</span> <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li><a href="index.html">Quản lý nhóm thành viên</a></li>
                     <li><a href="{{ route('user.index') }}">Quản lý thành viên</a></li>
