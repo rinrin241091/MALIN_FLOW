@@ -9,16 +9,20 @@
                     MALIN FLOW
                 </div>
             </li>
-            <li class="nav-item"><a class="nav-link" href="{{ route('backend.home') }}">HOMEPAGE</a></li>
-            <li class="active">
-                <a href="{{ route('dashboard.index') }}"><i class="fa fa-th-large"></i> <span class="nav-label">Quản lý thành viên</span> <span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level">
+            <li>
+                <a href="{{ route('backend.home') }}"><i class="fa fa-home"></i> <span class="nav-label">HOMEPAGE</span></a>
+            </li>
+            <li class="{{ request()->routeIs('user.*') ? 'active' : '' }}">
+                <a href="javascript:void(0)"><i class="fa fa-users"></i> <span class="nav-label">Quản lý thành viên</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse {{ request()->routeIs('user.*') ? 'in' : '' }}">
                     <li><a href="index.html">Quản lý nhóm thành viên</a></li>
-                    <li><a href="{{ route('user.index') }}">Quản lý thành viên</a></li>
+                    <li class="{{ request()->routeIs('user.index') ? 'active' : '' }}">
+                        <a href="{{ route('user.index') }}">Quản lý thành viên</a>
+                    </li>
                 </ul>
             </li>
             <li class="{{ request()->routeIs('category.*') ? 'active' : '' }}">
-                <a href="{{ route('dashboard.index') }}"><i class="fa fa-list"></i> <span class="nav-label">Quản lý danh mục</span> <span class="fa arrow"></span></a>
+                <a href="javascript:void(0)"><i class="fa fa-list"></i> <span class="nav-label">Quản lý danh mục</span> <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse {{ request()->routeIs('category.*') ? 'in' : '' }}">
                     <li class="{{ request()->routeIs('category.fonds') ? 'active' : '' }}">
                         <a href="{{ route('category.fonds') }}">Phông chỉnh lý</a>
@@ -32,12 +36,9 @@
                     <li class="{{ request()->routeIs('category.shelves') ? 'active' : '' }}">
                         <a href="{{ route('category.shelves') }}">Kệ trong kho</a>
                     </li>
-                    
                 </ul>
             </li>
-            
         </ul>
-
     </div>
 </nav>
 
