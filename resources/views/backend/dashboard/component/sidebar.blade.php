@@ -4,7 +4,7 @@
             <li class="nav-header">
                 <div class="avatar"> 
                     @if(auth()->check() && auth()->user()->image)
-                        <img alt="{{ auth()->user()->name }}" class="img-circle" src="{{ url(auth()->user()->image) }}" width="60" height="60"/>
+                        <img alt="{{ auth()->user()->name }}" class="img-circle" src="{{ asset(ltrim(auth()->user()->image, '/')) }}" width="60" height="60"/>
                     @else
                         <img alt="Default Logo" class="img-circle" src="{{ asset('LOGO/LOGO.png') }}" width="60" height="60"/>
                     @endif

@@ -78,8 +78,8 @@
                                                 {{ $warehouse->capacity ?? 'N/A' }}
                                             </td>
                                             <td class="text-center">
-                                                <a href="#" class="btn btn-success"><i class="fa fa-edit"></i></a>
-                                                <form action="#" method="POST" style="display:inline;">
+                                                <a href="{{ route('category.editWarehouse', $warehouse->id) }}" class="btn btn-success"><i class="fa fa-edit"></i></a>
+                                                <form action="{{ route('category.destroyWarehouse', ['id' => $warehouse->id])}}" method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa kho này?')">

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\AuthController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\UserController;
+use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Middleware\AuthenticateMiddleware;
 /*
 |--------------------------------------------------------------------------
@@ -57,7 +58,7 @@ Route::prefix('user')->group(function () {
     Route::delete('user/bulk-delete', [UserController::class, 'bulkDelete'])->name('user.bulkDelete')->middleware('auth', 'role:admin');
 
     //Active_user
-    Route::post('user/toggle-status', [App\Http\Controllers\Backend\UserController::class, 'toggleStatus'])->name('user.toggleStatus')->middleware('role:admin');
+    Route::post('user/toggle-status', [UserController::class, 'toggleStatus'])->name('user.toggleStatus')->middleware('role:admin');
 });
 
 
@@ -74,24 +75,36 @@ Route::prefix('settings')->group(function () {
 //Quản lý danh mục
 Route::prefix('category')->group(function () {
     // Phông Chỉnh Lý
-    Route::get('fonds', [App\Http\Controllers\Backend\CategoryController::class, 'fonds'])->name('category.fonds')->middleware('auth', 'role:admin');
-    Route::get('fonds/create', [App\Http\Controllers\Backend\CategoryController::class, 'createFond'])->name('category.fonds.create')->middleware('auth', 'role:admin');
-    Route::post('fonds', [App\Http\Controllers\Backend\CategoryController::class, 'storeFond'])->name('category.fonds.store')->middleware('auth', 'role:admin');
+    Route::get('fonds', [CategoryController::class, 'fonds'])->name('category.fonds')->middleware('auth', 'role:admin');
+    Route::get('fonds/create', [CategoryController::class, 'createFond'])->name('category.fonds.create')->middleware('auth', 'role:admin');
+    Route::post('fonds', [CategoryController::class, 'storeFond'])->name('category.fonds.store')->middleware('auth', 'role:admin');
+    Route::get('fonds/edit/{id}', [CategoryController::class, 'editFond'])->name('category.editFond')->middleware('auth', 'role:admin');
+    Route::put('fonds/update/{id}', [CategoryController::class, 'updateFond'])->name('category.updateFond')->middleware('auth', 'role:admin');
+    Route::delete('fonds/{id}', [CategoryController::class, 'destroyFond'])->name('category.destroyFond')->middleware('auth', 'role:admin');
 
     // Danh Mục Tài Liệu
-    Route::get('categories', [App\Http\Controllers\Backend\CategoryController::class, 'categories'])->name('category.categories')->middleware('auth', 'role:admin');
-    Route::get('categories/create', [App\Http\Controllers\Backend\CategoryController::class, 'createCategory'])->name('category.categories.create')->middleware('auth', 'role:admin');
-    Route::post('categories', [App\Http\Controllers\Backend\CategoryController::class, 'storeCategory'])->name('category.categories.store')->middleware('auth', 'role:admin');
+    Route::get('categories', [CategoryController::class, 'categories'])->name('category.categories')->middleware('auth', 'role:admin');
+    Route::get('categories/create', [CategoryController::class, 'createCategory'])->name('category.categories.create')->middleware('auth', 'role:admin');
+    Route::post('categories', [CategoryController::class, 'storeCategory'])->name('category.categories.store')->middleware('auth', 'role:admin');
+    Route::get('categories/edit/{id}', [CategoryController::class, 'editCategory'])->name('category.editCategory')->middleware('auth', 'role:admin');
+    Route::put('categories/update/{id}', [CategoryController::class, 'updateCategory'])->name('category.updateCategory')->middleware('auth', 'role:admin');
+    Route::delete('categories/{id}', [CategoryController::class, 'destroyCategory'])->name('category.destroyCategory')->middleware('auth', 'role:admin');
 
     // Kho Lưu Trữ
-    Route::get('warehouses', [App\Http\Controllers\Backend\CategoryController::class, 'warehouses'])->name('category.warehouses')->middleware('auth', 'role:admin');
-    Route::get('warehouses/create', [App\Http\Controllers\Backend\CategoryController::class, 'createWarehouse'])->name('category.warehouses.create')->middleware('auth', 'role:admin');
-    Route::post('warehouses', [App\Http\Controllers\Backend\CategoryController::class, 'storeWarehouse'])->name('category.warehouses.store')->middleware('auth', 'role:admin');
+    Route::get('warehouses', [CategoryController::class, 'warehouses'])->name('category.warehouses')->middleware('auth', 'role:admin');
+    Route::get('warehouses/create', [CategoryController::class, 'createWarehouse'])->name('category.warehouses.create')->middleware('auth', 'role:admin');
+    Route::post('warehouses', [CategoryController::class, 'storeWarehouse'])->name('category.warehouses.store')->middleware('auth', 'role:admin');
+    Route::get('warehouses/edit/{id}', [CategoryController::class, 'editWarehouse'])->name('category.editWarehouse')->middleware('auth', 'role:admin');
+    Route::put('warehouses/update/{id}', [CategoryController::class, 'updateWarehouse'])->name('category.updateWarehouse')->middleware('auth', 'role:admin');
+    Route::delete('warehouses/{id}', [CategoryController::class, 'destroyWarehouse'])->name('category.destroyWarehouse')->middleware('auth', 'role:admin');
 
     // Kệ Trong Kho
-    Route::get('shelves', [App\Http\Controllers\Backend\CategoryController::class, 'shelves'])->name('category.shelves')->middleware('auth', 'role:admin');
-    Route::get('shelves/create', [App\Http\Controllers\Backend\CategoryController::class, 'createShelf'])->name('category.shelves.create')->middleware('auth', 'role:admin');
-    Route::post('shelves', [App\Http\Controllers\Backend\CategoryController::class, 'storeShelf'])->name('category.shelves.store')->middleware('auth', 'role:admin');
+    Route::get('shelves', [CategoryController::class, 'shelves'])->name('category.shelves')->middleware('auth', 'role:admin');
+    Route::get('shelves/create', [CategoryController::class, 'createShelf'])->name('category.shelves.create')->middleware('auth', 'role:admin');
+    Route::post('shelves', [CategoryController::class, 'storeShelf'])->name('category.shelves.store')->middleware('auth', 'role:admin');
+    Route::get('shelves/edit/{id}', [CategoryController::class, 'editShelf'])->name('category.editShelf')->middleware('auth', 'role:admin');
+    Route::put('shelves/update/{id}', [CategoryController::class, 'updateShelf'])->name('category.updateShelf')->middleware('auth', 'role:admin');
+    Route::delete('shelves/{id}', [CategoryController::class, 'destroyShelf'])->name('category.destroyShelf')->middleware('auth', 'role:admin');
 });
 
 

@@ -52,6 +52,58 @@ class CategoryController extends Controller
         return redirect()->route('category.fonds')->with('success', 'Thêm phông thành công!');
     }
 
+    public function editFond($id)
+    {
+        $fond = Fond::findOrFail($id);
+        $template = 'backend.category.update_fond';
+        $title = 'Quản lý danh mục - Chỉnh sửa phông chỉnh lý';
+        return view('backend.dashboard.layout', compact('fond', 'template', 'title'));
+    }
+
+    public function updateFond(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:50|unique:fonds,code,'.$id,
+            'description' => 'nullable|string'
+        ]);
+
+        $fond = Fond::findOrFail($id);
+        $fond->update([
+            'name' => $request->name,
+            'code' => $request->code,
+            'description' => $request->description
+        ]);
+
+        return redirect()->route('category.fonds')->with('success', 'Cập nhật phông thành công!');
+    }
+
+    public function destroyFond($id)
+    {
+        try {
+            $fond = Fond::findOrFail($id);
+            
+            // Kiểm tra xem có danh mục nào đang sử dụng phông này không
+            if ($fond->categories()->count() > 0) {
+                return redirect()->route('category.fonds')
+                    ->with('error', 'Không thể xóa phông này vì đang có danh mục sử dụng!');
+            }
+            
+            // Kiểm tra xem có kho nào đang sử dụng phông này không
+            if ($fond->warehouses()->count() > 0) {
+                return redirect()->route('category.fonds')
+                    ->with('error', 'Không thể xóa phông này vì đang có kho sử dụng!');
+            }
+
+            $fond->delete();
+            return redirect()->route('category.fonds')
+                ->with('success', 'Xóa phông thành công!');
+        } catch (\Exception $e) {
+            return redirect()->route('category.fonds')
+                ->with('error', 'Có lỗi xảy ra khi xóa phông!');
+        }
+    }
+
     // Danh Mục Tài Liệu
     public function categories(Request $request)
     {
@@ -95,6 +147,48 @@ class CategoryController extends Controller
         ]);
 
         return redirect()->route('category.categories')->with('success', 'Thêm danh mục thành công!');
+    }
+
+    public function editCategory($id)
+    {
+        $category = Category::findOrFail($id);
+        $fonds = Fond::all();
+        $template = 'backend.category.update_category';
+        $title = 'Quản lý danh mục - Chỉnh sửa danh mục tài liệu';
+        return view('backend.dashboard.layout', compact('category', 'fonds', 'template', 'title'));
+    }
+
+    public function updateCategory(Request $request, $id)
+    {
+        $request->validate([
+            'fond_id' => 'required|exists:fonds,id',
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:50|unique:categories,code,'.$id,
+            'description' => 'nullable|string'
+        ]);
+
+        $category = Category::findOrFail($id);
+        $category->update([
+            'fond_id' => $request->fond_id,
+            'name' => $request->name,
+            'code' => $request->code,
+            'description' => $request->description
+        ]);
+
+        return redirect()->route('category.categories')->with('success', 'Cập nhật danh mục thành công!');
+    }
+
+    public function destroyCategory($id)
+    {
+        try {
+            $category = Category::findOrFail($id);
+            $category->delete();
+            return redirect()->route('category.categories')
+                ->with('success', 'Xóa danh mục thành công!');
+        } catch (\Exception $e) {
+            return redirect()->route('category.categories')
+                ->with('error', 'Có lỗi xảy ra khi xóa danh mục!');
+        }
     }
 
     // Kho Lưu Trữ
@@ -144,6 +238,59 @@ class CategoryController extends Controller
         return redirect()->route('category.warehouses')->with('success', 'Thêm kho thành công!');
     }
 
+    public function editWarehouse($id)
+    {
+        $warehouse = Warehouse::findOrFail($id);
+        $fonds = Fond::all();
+        $template = 'backend.category.update_warehouse';
+        $title = 'Quản lý danh mục - Chỉnh sửa kho lưu trữ';
+        return view('backend.dashboard.layout', compact('warehouse', 'fonds', 'template', 'title'));
+    }
+
+    public function updateWarehouse(Request $request, $id)
+    {
+        $request->validate([
+            'fond_id' => 'required|exists:fonds,id',
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:50|unique:warehouses,code,'.$id,
+            'location' => 'required|string|max:255',
+            'capacity' => 'required|integer|min:1',
+            'description' => 'nullable|string'
+        ]);
+
+        $warehouse = Warehouse::findOrFail($id);
+        $warehouse->update([
+            'fond_id' => $request->fond_id,
+            'name' => $request->name,
+            'code' => $request->code,
+            'location' => $request->location,
+            'capacity' => $request->capacity,
+            'description' => $request->description
+        ]);
+
+        return redirect()->route('category.warehouses')->with('success', 'Cập nhật kho thành công!');
+    }
+
+    public function destroyWarehouse($id)
+    {
+        try {
+            $warehouse = Warehouse::findOrFail($id);
+            
+            // Kiểm tra xem có kệ nào trong kho không
+            if ($warehouse->shelves()->count() > 0) {
+                return redirect()->route('category.warehouses')
+                    ->with('error', 'Không thể xóa kho này vì đang có kệ bên trong!');
+            }
+
+            $warehouse->delete();
+            return redirect()->route('category.warehouses')
+                ->with('success', 'Xóa kho thành công!');
+        } catch (\Exception $e) {
+            return redirect()->route('category.warehouses')
+                ->with('error', 'Có lỗi xảy ra khi xóa kho!');
+        }
+    }
+
     // Kệ Trong Kho
     public function shelves(Request $request)
     {
@@ -187,6 +334,50 @@ class CategoryController extends Controller
         ]);
 
         return redirect()->route('category.shelves')->with('success', 'Thêm kệ thành công!');
+    }
+
+    public function editShelf($id)
+    {
+        $shelf = Shelf::findOrFail($id);
+        $warehouses = Warehouse::all();
+        $template = 'backend.category.update_shelf';
+        $title = 'Quản lý danh mục - Chỉnh sửa kệ trong kho';
+        return view('backend.dashboard.layout', compact('shelf', 'warehouses', 'template', 'title'));
+    }
+
+    public function updateShelf(Request $request, $id)
+    {
+        $request->validate([
+            'warehouse_id' => 'required|exists:warehouses,id',
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:50|unique:shelves,code,'.$id,
+            'capacity' => 'required|integer|min:1',
+            'description' => 'nullable|string'
+        ]);
+
+        $shelf = Shelf::findOrFail($id);
+        $shelf->update([
+            'warehouse_id' => $request->warehouse_id,
+            'name' => $request->name,
+            'code' => $request->code,
+            'capacity' => $request->capacity,
+            'description' => $request->description
+        ]);
+
+        return redirect()->route('category.shelves')->with('success', 'Cập nhật kệ thành công!');
+    }
+
+    public function destroyShelf($id)
+    {
+        try {
+            $shelf = Shelf::findOrFail($id);
+            $shelf->delete();
+            return redirect()->route('category.shelves')
+                ->with('success', 'Xóa kệ thành công!');
+        } catch (\Exception $e) {
+            return redirect()->route('category.shelves')
+                ->with('error', 'Có lỗi xảy ra khi xóa kệ!');
+        }
     }
 
     private function generateCode($prefix)

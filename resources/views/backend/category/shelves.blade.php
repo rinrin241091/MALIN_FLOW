@@ -74,8 +74,8 @@
                                                 {{ $shelf->capacity ?? 'N/A' }}
                                             </td>
                                             <td class="text-center">
-                                                <a href="#" class="btn btn-success"><i class="fa fa-edit"></i></a>
-                                                <form action="#" method="POST" style="display:inline;">
+                                                <a href="{{ route('category.editShelf', $shelf->id) }}" class="btn btn-success"><i class="fa fa-edit"></i></a>
+                                                <form action="{{ route('category.destroyShelf', ['id' => $shelf->id])}}" method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa kệ này?')">

@@ -141,7 +141,7 @@ class UserController extends Controller
                     mkdir(public_path('avatars'), 0775, true);
                 }
                 $file->move(public_path('avatars'), $filename);
-                $user->image = '/avatars/' . $filename; // Thêm dấu / ở đầu
+                $user->image = 'avatars/' . $filename; // Bỏ dấu / ở đầu
             }
 
             $user->save();
@@ -228,7 +228,7 @@ class UserController extends Controller
                     mkdir(public_path('avatars'), 0775, true);
                 }
                 $file->move(public_path('avatars'), $filename);
-                $user->image = '/avatars/' . $filename; // Thêm dấu / ở đầu
+                $user->image = 'avatars/' . $filename; // Bỏ dấu / ở đầu
             }
 
             $user->save();
@@ -325,7 +325,7 @@ class UserController extends Controller
                 mkdir(public_path('avatars'), 0775, true);
             }
             $file->move(public_path('avatars'), $filename);
-            $user->image = '/avatars/' . $filename; // Thêm dấu / ở đầu
+            $user->image = 'avatars/' . $filename; // Bỏ dấu / ở đầu
         }
 
         $user->save();

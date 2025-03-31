@@ -74,8 +74,8 @@
                                                 {{ $category->description ?? 'N/A' }}
                                             </td>
                                             <td class="text-center">
-                                                <a href="#" class="btn btn-success"><i class="fa fa-edit"></i></a>
-                                                <form action="#" method="POST" style="display:inline;">
+                                                <a href="{{ route('category.editCategory', $category->id) }}" class="btn btn-success"><i class="fa fa-edit"></i></a>
+                                                <form action="{{ route('category.destroyCategory', ['id' => $category->id])}}" method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?')">
