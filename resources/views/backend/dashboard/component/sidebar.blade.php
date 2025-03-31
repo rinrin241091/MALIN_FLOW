@@ -3,7 +3,11 @@
         <ul class="nav metismenu" id="side-menu">
             <li class="nav-header">
                 <div class="avatar"> 
-                    <img alt="image" class="img-circle" src="{{ asset('/LOGO/LOGO.png') }}" width="60" height="60"/>
+                    @if(auth()->check() && auth()->user()->image)
+                        <img alt="{{ auth()->user()->name }}" class="img-circle" src="{{ url(auth()->user()->image) }}" width="60" height="60"/>
+                    @else
+                        <img alt="Default Logo" class="img-circle" src="{{ asset('LOGO/LOGO.png') }}" width="60" height="60"/>
+                    @endif
                 </div>
                 <div class="logo-element">
                     MALIN FLOW

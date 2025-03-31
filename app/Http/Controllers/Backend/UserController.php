@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Services\UserService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller 
 {
@@ -128,15 +129,19 @@ class UserController extends Controller
             $user->name = $validated['name'];
             $user->email = $validated['email'];
             $user->phone = $validated['phone'];
-            $user->password = bcrypt($validated['password']);
+            $user->password = $validated['password']; // Model sẽ tự động thêm salt và mã hóa
             $user->address = $validated['address'];
 
             // Xử lý upload ảnh
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
                 $filename = time() . '_' . $file->getClientOriginalName();
+                // Tạo thư mục nếu chưa tồn tại
+                if (!file_exists(public_path('avatars'))) {
+                    mkdir(public_path('avatars'), 0775, true);
+                }
                 $file->move(public_path('avatars'), $filename);
-                $user->image = 'avatars/' . $filename;
+                $user->image = '/avatars/' . $filename; // Thêm dấu / ở đầu
             }
 
             $user->save();
@@ -208,7 +213,7 @@ class UserController extends Controller
             $user->address = $validated['address'];
 
             if ($request->filled('password')) {
-                $user->password = bcrypt($validated['password']);
+                $user->password = $validated['password']; // Model sẽ tự động thêm salt và mã hóa
             }
 
             if ($request->hasFile('image')) {
@@ -218,8 +223,12 @@ class UserController extends Controller
                 }
                 $file = $request->file('image');
                 $filename = time() . '_' . $file->getClientOriginalName();
+                // Tạo thư mục nếu chưa tồn tại
+                if (!file_exists(public_path('avatars'))) {
+                    mkdir(public_path('avatars'), 0775, true);
+                }
                 $file->move(public_path('avatars'), $filename);
-                $user->image = 'avatars/' . $filename;
+                $user->image = '/avatars/' . $filename; // Thêm dấu / ở đầu
             }
 
             $user->save();
@@ -311,8 +320,12 @@ class UserController extends Controller
             }
             $file = $request->file('image');
             $filename = time() . '_' . $file->getClientOriginalName();
+            // Tạo thư mục nếu chưa tồn tại
+            if (!file_exists(public_path('avatars'))) {
+                mkdir(public_path('avatars'), 0775, true);
+            }
             $file->move(public_path('avatars'), $filename);
-            $user->image = 'avatars/' . $filename;
+            $user->image = '/avatars/' . $filename; // Thêm dấu / ở đầu
         }
 
         $user->save();
@@ -330,19 +343,27 @@ class UserController extends Controller
         $validated = $request->validate([
             'current_password' => 'required',
             'password' => 'required|string|min:8|confirmed',
+        ], [
+            'current_password.required' => 'Vui lòng nhập mật khẩu hiện tại',
+            'password.required' => 'Vui lòng nhập mật khẩu mới',
+            'password.min' => 'Mật khẩu mới phải có ít nhất 8 ký tự',
+            'password.confirmed' => 'Xác nhận mật khẩu mới không khớp'
         ]);
 
-        // Kiểm tra mật khẩu hiện tại
-        if (md5($request->current_password) !== $user->password) 
+        $salt = env('PASSWORD_SALT', 'your-secret-salt');
+        // Kiểm tra mật khẩu hiện tại với salt
+        if (md5($request->current_password . $salt) !== $user->password) 
         {
-            return redirect()->route('settings')->with('error', __('Mật khẩu hiện tại không đúng.'));
+            return redirect()->route('settings')
+                ->with('error', 'Mật khẩu hiện tại không đúng');
         }
 
-        // Cập nhật mật khẩu mới
-        $user->password = $request->password;
+        // Cập nhật mật khẩu mới với salt
+        $user->password = $request->password; // Model sẽ tự động thêm salt và mã hóa
         $user->save();
 
-        return redirect()->route('settings')->with('success', __('Mật khẩu đã được thay đổi thành công!'));
+        return redirect()->route('settings')
+            ->with('success', 'Mật khẩu đã được thay đổi thành công');
     }
 
     public function changeLanguage(Request $request)
