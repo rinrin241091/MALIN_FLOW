@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Services\UserService;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller 
 {
@@ -311,28 +312,65 @@ class UserController extends Controller
     {
         if (!auth()->user()->hasPermissionTo('delete user')) 
         {
-            abort(403, 'Unauthorized action.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized action.'
+            ], 403);
         }
 
         $userIds = $request->input('user_ids', []);
 
         if (empty($userIds)) 
         {
-            return redirect()->route('user.index')->with('error', 'Vui lòng chọn ít nhất một thành viên để xóa.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Vui lòng chọn ít nhất một thành viên để xóa.'
+            ], 400);
         }
 
-        // Xóa ảnh của các thành viên được chọn
-        $users = User::whereIn('id', $userIds)->get();
-        foreach ($users as $user) {
-            if ($user->image && file_exists(public_path($user->image))) {
-                unlink(public_path($user->image));
+        try {
+            DB::beginTransaction();
+            
+            // Kiểm tra xem có admin trong danh sách không
+            $hasAdmin = User::whereIn('id', $userIds)
+                           ->where('is_admin', true)
+                           ->exists();
+            
+            if ($hasAdmin) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Không thể xóa tài khoản admin.'
+                ], 400);
             }
+
+            // Xóa ảnh của các thành viên được chọn
+            $users = User::whereIn('id', $userIds)->get();
+            foreach ($users as $user) {
+                if ($user->image && file_exists(public_path($user->image))) {
+                    unlink(public_path($user->image));
+                }
+            }
+
+            // Xóa các thành viên được chọn
+            $deleted = User::whereIn('id', $userIds)->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã xóa ' . count($userIds) . ' thành viên thành công.',
+                'deleted_count' => $deleted
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Bulk delete error: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Có lỗi xảy ra khi xóa thành viên: ' . $e->getMessage()
+            ], 500);
         }
-
-        // Xóa các thành viên được chọn
-        User::whereIn('id', $userIds)->delete();
-
-        return redirect()->route('user.index')->with('success', 'Đã xóa các thành viên được chọn.');
     }
 
     

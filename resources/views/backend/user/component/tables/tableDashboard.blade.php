@@ -6,7 +6,7 @@
             <thead>
                 <tr>
                     <th>
-                        <input type="checkbox" value="" id="checkAll" class="input-checkAll"> 
+                        <input type="checkbox" id="checkAll" class="checkAll"> 
                     </th>
                     <th class="text-center">STT</th>
                     <th style="width:90px">Avatar</th>
@@ -23,7 +23,7 @@
                     @foreach($users as $key => $user)
                         <tr>
                             <td>
-                                <input type="checkbox" name="user_ids[]" value="{{ $user->id }}" class="input-checkbox checkBoxItem"> 
+                                <input type="checkbox" name="user_ids[]" value="{{ $user->id }}" class="checkBoxItem"> 
                             </td>
                             <td>
                                 {{ ($users->currentPage() - 1) * $users->perPage() + $key + 1 }}
@@ -76,35 +76,34 @@
             </tbody>
         </table>
     </div>
-    @can('delete user')
-        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa các thành viên đã chọn?')">Xóa hàng loạt</button>
-    @endcan
+    <div class="row mt-3">
+        <div class="col-md-6">
+            <span id="selected-count" class="text-primary">Đã chọn: 0 thành viên</span>
+        </div>
+        <div class="col-md-6 text-right">
+            @can('delete user')
+                <button type="submit" class="btn btn-danger" id="bulk-delete-btn">
+                    <i class="fa fa-trash"></i> Xóa hàng loạt
+                </button>
+            @endcan
+        </div>
+    </div>
 </form>
 
-</script>
-<!-- Thêm Switchery và SweetAlert2 -->
+<!-- Thêm Switchery -->
 <link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
 <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<!-- JavaScript -->
+<!-- JavaScript cho Switchery -->
 <script>
     document.querySelectorAll('.js-switch').forEach(function(element) {
         new Switchery(element, { color: '#1ab394' });
     });
 
-    // Chọn tất cả checkbox
-    document.getElementById('checkAll').addEventListener('change', function() {
-        let checkboxes = document.querySelectorAll('.checkBoxItem');
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = this.checked;
-        });
-    });
-
     // Hàm thay đổi trạng thái user
     function toggleUserStatus(element) {
         const userId = element.getAttribute('data-user-id');
-        const newStatus = element.checked ? 1 : 0; // true -> 1, false -> 0
+        const newStatus = element.checked ? 1 : 0;
 
         Swal.fire({
             title: 'Xác nhận',
@@ -134,15 +133,15 @@
                         Swal.fire('Thành công!', data.message, 'success');
                     } else {
                         Swal.fire('Lỗi!', data.message, 'error');
-                        element.checked = !element.checked; // Hoàn tác nếu có lỗi
+                        element.checked = !element.checked;
                     }
                 })
                 .catch(error => {
                     Swal.fire('Lỗi!', 'Có lỗi xảy ra khi cập nhật trạng thái.', 'error');
-                    element.checked = !element.checked; // Hoàn tác nếu có lỗi
+                    element.checked = !element.checked;
                 });
             } else {
-                element.checked = !element.checked; // Hoàn tác nếu người dùng hủy
+                element.checked = !element.checked;
             }
         });
     }
