@@ -27,33 +27,85 @@
                     <form method="POST" action="{{ route('category.shelves.store') }}">
                         @csrf
                         <div class="form-group">
-                            <label for="warehouse_id">Kho</label>
+                            <label for="warehouse_id">Kho lưu trữ <span class="text-danger">*</span></label>
                             <select name="warehouse_id" id="warehouse_id" class="form-control" required>
                                 <option value="">Chọn kho</option>
                                 @foreach($warehouses as $warehouse)
-                                    <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
+                                    <option value="{{ $warehouse->id }}" {{ old('warehouse_id') == $warehouse->id ? 'selected' : '' }}>
+                                        {{ $warehouse->name }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('warehouse_id')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+
                         <div class="form-group">
-                            <label for="name">Tên kệ</label>
+                            <label for="name">Tên kệ <span class="text-danger">*</span></label>
                             <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required>
                             @error('name')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+
                         <div class="form-group">
                             <label for="capacity">Sức chứa</label>
                             <input type="number" name="capacity" id="capacity" class="form-control" value="{{ old('capacity') }}">
+                            @error('capacity')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
-                        <button type="submit" class="btn btn-primary">Lưu</button>
-                        <a href="{{ route('category.shelves') }}" class="btn btn-default">Hủy</a>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Lưu</button>
+                            <a href="{{ route('category.shelves') }}" class="btn btn-default">Hủy</a>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@push('styles')
+<style>
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.text-danger {
+    color: #ed5565;
+}
+
+.form-control {
+    border: 1px solid #e5e6e7;
+    border-radius: 1px;
+    padding: 6px 12px;
+    height: 34px;
+}
+
+textarea.form-control {
+    height: auto;
+}
+
+.btn {
+    margin-right: 5px;
+}
+
+.btn-primary {
+    background-color: #1ab394;
+    border-color: #1ab394;
+}
+
+.btn-default {
+    background-color: #fff;
+    border-color: #ddd;
+}
+</style>
+@endpush

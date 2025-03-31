@@ -1,127 +1,149 @@
+<link rel="stylesheet" href="{{ asset('backend/css/category.css') }}">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Quản lý thành viên</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="{{ route('dashboard.index') }}">Dashboard</a>
+            </li>
+            <li>
+                <a href="{{ route('user.index') }}">Danh sách thành viên</a>
+            </li>
+            <li class="active">
+                <strong>Chỉnh sửa</strong>
+            </li>
+        </ol>
+    </div>
+</div>
 
-<div class="row mt20">
-    <div class="col-lg-6 col-md-8 col-sm-12 mx-auto">
-        <div class="ibox float-e-margins">
-            <div class="ibox-title">
-                <h5>Cập nhật thông tin thành viên</h5>
-            </div>
-            <div class="ibox-content">
-                <form action="{{ route('user.update', $user->id) }}" method="POST" enctype="multipart/form-data" class="form-horizontal">
-                    @csrf
-                    @method('PUT')
-
-                    <!-- Tên -->
-                    <div class="form-group">
-                        <label for="name" class="col-sm-3 control-label">Tên <span class="text-danger">*</span></label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $user->name) }}" required>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Chỉnh sửa thành viên</h5>
+                </div>
+                <div class="ibox-content">
+                    <form method="POST" action="{{ route('user.update', $user->id) }}" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <div class="form-group">
+                            <label for="name">Họ và tên <span class="text-danger">*</span></label>
+                            <input type="text" name="name" id="name" class="form-control" value="{{ old('name', $user->name) }}" required>
                             @error('name')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                    </div>
 
-                    <!-- Email -->
-                    <div class="form-group">
-                        <label for="email" class="col-sm-3 control-label">Email <span class="text-danger">*</span></label>
-                        <div class="col-sm-9">
-                            <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $user->email) }}" required>
+                        <div class="form-group">
+                            <label for="email">Email <span class="text-danger">*</span></label>
+                            <input type="email" name="email" id="email" class="form-control" value="{{ old('email', $user->email) }}" required>
                             @error('email')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                    </div>
 
-                    <!-- Số điện thoại -->
-                    <div class="form-group">
-                        <label for="phone" class="col-sm-3 control-label">Số điện thoại <span class="text-danger">*</span></label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone', $user->phone) }}" required>
+                        <div class="form-group">
+                            <label for="phone">Số điện thoại <span class="text-danger">*</span></label>
+                            <input type="text" name="phone" id="phone" class="form-control" value="{{ old('phone', $user->phone) }}" required>
                             @error('phone')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                    </div>
 
-                    <!-- Mật khẩu -->
-                    <div class="form-group">
-                        <label for="password" class="col-sm-3 control-label">Mật khẩu mới</label>
-                        <div class="col-sm-9">
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Để trống nếu không muốn thay đổi">
+                        <div class="form-group">
+                            <label for="password">Mật khẩu mới</label>
+                            <input type="password" name="password" id="password" class="form-control">
+                            <small class="form-text text-muted">Để trống nếu không muốn thay đổi mật khẩu</small>
                             @error('password')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                    </div>
 
-                    <!-- Địa chỉ -->
-                    <div class="form-group">
-                        <label for="address" class="col-sm-3 control-label">Địa chỉ <span class="text-danger">*</span></label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="address" name="address" value="{{ old('address', $user->address) }}" required>
+                        <div class="form-group">
+                            <label for="password_confirmation">Xác nhận mật khẩu mới</label>
+                            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Địa chỉ <span class="text-danger">*</span></label>
+                            <input type="text" name="address" id="address" class="form-control" value="{{ old('address', $user->address) }}" required>
                             @error('address')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                    </div>
 
-                    <!-- Ảnh đại diện -->
-                    <div class="form-group">
-                        <label for="image" class="col-sm-3 control-label">Ảnh đại diện</label>
-                        <div class="col-sm-9">
-                            <input type="file" class="form-control-file" id="image" name="image">
+                        <div class="form-group">
+                            <label for="image">Ảnh đại diện</label>
                             @if($user->image)
-                                <div class="mt-2">
-                                    <img src="{{ asset('storage/' . $user->image) }}" alt="Avatar" class="img-thumbnail" style="max-width: 100px;">
+                                <div class="mb-2">
+                                    <img src="{{ asset($user->image) }}" alt="Current avatar" class="img-thumbnail" style="max-width: 200px">
                                 </div>
                             @endif
+                            <input type="file" name="image" id="image" class="form-control" accept="image/*">
                             @error('image')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                    </div>
 
-                    <!-- Nút Cập nhật -->
-                    <div class="form-group">
-                        <div class="col-sm-offset-3 col-sm-9">
-                            <button type="submit" class="btn btn-primary">Cập nhật</button>
-                            <a href="{{ route('user.index') }}" class="btn btn-secondary">Hủy</a>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                            <a href="{{ route('user.index') }}" class="btn btn-default">Hủy</a>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+@push('styles')
 <style>
-    .form-horizontal .form-group {
+.form-group {
     margin-bottom: 20px;
 }
-.form-horizontal .control-label {
+
+label {
     font-weight: 600;
+    margin-bottom: 5px;
 }
-.form-horizontal .form-control {
-    border-radius: 5px;
-    box-shadow: none;
-    transition: border-color 0.3s ease;
-}
-.form-horizontal .form-control:focus {
-    border-color: #1ab394;
-    box-shadow: 0 0 5px rgba(26, 179, 148, 0.3);
-}
+
 .text-danger {
-    font-size: 0.9em;
-    margin-top: 5px;
-    display: block;
+    color: #ed5565;
 }
+
+.form-control {
+    border: 1px solid #e5e6e7;
+    border-radius: 1px;
+    padding: 6px 12px;
+    height: 34px;
+}
+
+input[type="file"].form-control {
+    padding: 3px 12px;
+}
+
+.btn {
+    margin-right: 5px;
+}
+
 .btn-primary {
     background-color: #1ab394;
     border-color: #1ab394;
-    transition: background-color 0.3s ease;
-}
-.btn-primary:hover {
-    background-color: #179d82;
-    border-color: #179d82;
 }
 
+.btn-default {
+    background-color: #fff;
+    border-color: #ddd;
+}
+
+.img-thumbnail {
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+.mb-2 {
+    margin-bottom: 1rem;
+}
 </style>
+@endpush

@@ -24,7 +24,7 @@ class CategoryController extends Controller
         })->paginate(20);
 
         $template = 'backend.category.fonds';
-        $title = 'Quản lý danh mục - Phông chỉnh lý'; // Thêm biến $title
+        $title = 'Quản lý danh mục - Phông chỉnh lý';
         return view('backend.dashboard.layout', compact('fonds', 'template', 'title'));
     }
 
@@ -32,7 +32,7 @@ class CategoryController extends Controller
     {
         $template = 'backend.category.create_fond';
         $title = 'Quản lý danh mục - Thêm mới phông chỉnh lý';
-        return view('backend.category.create_fond', compact('template', 'title'));
+        return view('backend.dashboard.layout', compact('template', 'title'));
     }
 
     public function storeFond(Request $request)
@@ -42,7 +42,7 @@ class CategoryController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $code = $this->generateCode('FOND'); // Tự động gán mã định danh
+        $code = $this->generateCode('FOND');
         Fond::create([
             'name' => $request->name,
             'code' => $code,
@@ -75,7 +75,7 @@ class CategoryController extends Controller
         $fonds = Fond::all();
         $template = 'backend.category.create_category';
         $title = 'Quản lý danh mục - Thêm mới danh mục tài liệu';
-        return view('backend.category.create_category', compact('fonds', 'template', 'title'));
+        return view('backend.dashboard.layout', compact('fonds', 'template', 'title'));
     }
 
     public function storeCategory(Request $request)
@@ -86,7 +86,7 @@ class CategoryController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $code = $this->generateCode('CAT'); // Tự động gán mã định danh
+        $code = $this->generateCode('CAT');
         Category::create([
             'fond_id' => $request->fond_id,
             'name' => $request->name,
@@ -120,7 +120,7 @@ class CategoryController extends Controller
         $fonds = Fond::all();
         $template = 'backend.category.create_warehouse';
         $title = 'Quản lý danh mục - Thêm mới kho lưu trữ';
-        return view('backend.category.create_warehouse', compact('fonds', 'template', 'title'));
+        return view('backend.dashboard.layout', compact('fonds', 'template', 'title'));
     }
 
     public function storeWarehouse(Request $request)
@@ -132,7 +132,7 @@ class CategoryController extends Controller
             'capacity' => 'nullable|integer',
         ]);
 
-        $code = $this->generateCode('WH'); // Tự động gán mã định danh
+        $code = $this->generateCode('WH');
         Warehouse::create([
             'fond_id' => $request->fond_id,
             'name' => $request->name,
@@ -153,7 +153,7 @@ class CategoryController extends Controller
             return $query->where('name', 'like', "%{$search}%")
                         ->orWhere('code', 'like', "%{$search}%");
         })->when($warehouse_id, function ($query, $warehouse_id) {
-            return $query->where('warehouses_id', $warehouse_id);
+            return $query->where('warehouse_id', $warehouse_id);
         })->paginate(20);
 
         $warehouses = Warehouse::all();
@@ -167,7 +167,7 @@ class CategoryController extends Controller
         $warehouses = Warehouse::all();
         $template = 'backend.category.create_shelf';
         $title = 'Quản lý danh mục - Thêm mới kệ trong kho';
-        return view('backend.category.create_shelf', compact('warehouses', 'template', 'title'));
+        return view('backend.dashboard.layout', compact('warehouses', 'template', 'title'));
     }
 
     public function storeShelf(Request $request)
@@ -178,7 +178,7 @@ class CategoryController extends Controller
             'capacity' => 'nullable|integer',
         ]);
 
-        $code = $this->generateCode('SHELF'); // Tự động gán mã định danh
+        $code = $this->generateCode('SHELF');
         Shelf::create([
             'warehouse_id' => $request->warehouse_id,
             'name' => $request->name,
@@ -189,21 +189,11 @@ class CategoryController extends Controller
         return redirect()->route('category.shelves')->with('success', 'Thêm kệ thành công!');
     }
 
-    // Hàm tạo mã định danh
     private function generateCode($prefix)
     {
-        $latest = null;
-        if ($prefix == 'FOND') {
-            $latest = Fond::latest()->first();
-        } elseif ($prefix == 'CAT') {
-            $latest = Category::latest()->first();
-        } elseif ($prefix == 'WH') {
-            $latest = Warehouse::latest()->first();
-        } elseif ($prefix == 'SHELF') {
-            $latest = Shelf::latest()->first();
-        }
-
-        $number = $latest ? (int) Str::afterLast($latest->code, '-') + 1 : 1;
-        return $prefix . '-' . str_pad($number, 4, '0', STR_PAD_LEFT);
+        $lastFond = Fond::orderBy('id', 'desc')->first();
+        $lastNumber = $lastFond ? intval(substr($lastFond->code, strlen($prefix))) : 0;
+        $newNumber = $lastNumber + 1;
+        return $prefix . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
     }
 }

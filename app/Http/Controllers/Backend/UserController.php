@@ -82,7 +82,12 @@ class UserController extends Controller
         {
             abort(403, 'Unauthorized action.');
         }
-        return view('backend.user.addUser');
+        $config = $this->config();
+        $template = 'backend.user.addUser';
+        return view('backend.dashboard.layout', compact(
+            'template',
+            'config'
+        ));
     }
     //Xử lý thêm thành viên
     public function store(Request $request)
@@ -93,31 +98,56 @@ class UserController extends Controller
         }
         //validate input
         $validated = $request->validate([
-            'name' =>'required',
-            'email' =>'required|email|unique:users',
-            'phone' =>'required',
-            'password' =>'required|min:8|confirmed',
-            'address' => 'required',
-            'image' => 'nullable|image'
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required|string|max:20',
+            'password' => 'required|min:8|confirmed',
+            'address' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ], [
+            'name.required' => 'Vui lòng nhập họ và tên',
+            'name.max' => 'Họ và tên không được vượt quá 255 ký tự',
+            'email.required' => 'Vui lòng nhập email',
+            'email.email' => 'Email không đúng định dạng',
+            'email.unique' => 'Email đã tồn tại trong hệ thống',
+            'phone.required' => 'Vui lòng nhập số điện thoại',
+            'phone.max' => 'Số điện thoại không được vượt quá 20 ký tự',
+            'password.required' => 'Vui lòng nhập mật khẩu',
+            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
+            'password.confirmed' => 'Xác nhận mật khẩu không khớp',
+            'address.required' => 'Vui lòng nhập địa chỉ',
+            'address.max' => 'Địa chỉ không được vượt quá 255 ký tự',
+            'image.image' => 'File phải là hình ảnh',
+            'image.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif',
+            'image.max' => 'Kích thước hình ảnh không được vượt quá 2MB'
         ]);
 
-        //Tạo người dùng mới
-        $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->password = $request->password;
-        $user->address = $request->address;
+        try {
+            //Tạo người dùng mới
+            $user = new User();
+            $user->name = $validated['name'];
+            $user->email = $validated['email'];
+            $user->phone = $validated['phone'];
+            $user->password = bcrypt($validated['password']);
+            $user->address = $validated['address'];
 
-        // Xử lý upload ảnh
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('avatars'), $filename);
-            $user->image = 'avatars/' . $filename;
+            // Xử lý upload ảnh
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('avatars'), $filename);
+                $user->image = 'avatars/' . $filename;
+            }
+
+            $user->save();
+
+            return redirect()->route('user.index')
+                ->with('success', 'Thêm thành viên thành công');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Đã xảy ra lỗi khi thêm thành viên: ' . $e->getMessage());
         }
-        $user->save();
-        return redirect()->route('user.index')->with('success','Thành viên đã được thêm');
     }
 
     //Hiển thị form Edit
@@ -127,49 +157,94 @@ class UserController extends Controller
             abort(403, 'Unauthorized action.');
         }
         $user = User::find($id);
-        return view('backend.user.update', compact('user'));
+        if (!$user) {
+            return redirect()->route('user.index')->with('error', 'Thành viên không tồn tại');
+        }
+        $config = $this->config();
+        $template = 'backend.user.update';
+        return view('backend.dashboard.layout', compact(
+            'template',
+            'config',
+            'user'
+        ));
     }
     //Xử lý Edit
     public function update(Request $request, $id)
     {
+        if (!auth()->user()->hasPermissionTo('edit user')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
             'phone' => 'required|string|max:20',
-            'password' => 'nullable|string|min:8',
+            'password' => 'nullable|string|min:8|confirmed',
             'address' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ], [
+            'name.required' => 'Vui lòng nhập họ và tên',
+            'name.max' => 'Họ và tên không được vượt quá 255 ký tự',
+            'email.required' => 'Vui lòng nhập email',
+            'email.email' => 'Email không đúng định dạng',
+            'email.unique' => 'Email đã tồn tại trong hệ thống',
+            'phone.required' => 'Vui lòng nhập số điện thoại',
+            'phone.max' => 'Số điện thoại không được vượt quá 20 ký tự',
+            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
+            'password.confirmed' => 'Xác nhận mật khẩu không khớp',
+            'address.required' => 'Vui lòng nhập địa chỉ',
+            'address.max' => 'Địa chỉ không được vượt quá 255 ký tự',
+            'image.image' => 'File phải là hình ảnh',
+            'image.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif',
+            'image.max' => 'Kích thước hình ảnh không được vượt quá 2MB'
         ]);
-    
-        $user = User::findOrFail($id);
-    
-        if ($request->hasFile('image')) {
-            // Xóa ảnh cũ nếu có
-            if ($user->image && file_exists(public_path($user->image))) {
-                unlink(public_path($user->image));
+
+        try {
+            $user = User::findOrFail($id);
+
+            $user->name = $validated['name'];
+            $user->email = $validated['email'];
+            $user->phone = $validated['phone'];
+            $user->address = $validated['address'];
+
+            if ($request->filled('password')) {
+                $user->password = bcrypt($validated['password']);
             }
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('avatars'), $filename);
-            $validated['image'] = 'avatars/' . $filename;
+
+            if ($request->hasFile('image')) {
+                // Xóa ảnh cũ nếu có
+                if ($user->image && file_exists(public_path($user->image))) {
+                    unlink(public_path($user->image));
+                }
+                $file = $request->file('image');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('avatars'), $filename);
+                $user->image = 'avatars/' . $filename;
+            }
+
+            $user->save();
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Cập nhật thành viên thành công'
+                ]);
+            }
+
+            return redirect()->route('user.index')
+                ->with('success', 'Cập nhật thành viên thành công');
+        } catch (\Exception $e) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Đã xảy ra lỗi khi cập nhật thành viên: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Đã xảy ra lỗi khi cập nhật thành viên: ' . $e->getMessage());
         }
-    
-        if ($request->filled('password')) {
-            $validated['password'] = md5($request->password);
-        } else {
-            unset($validated['password']);
-        }
-    
-        $user->update($validated);
-    
-        if ($request->expectsJson()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Cập nhật thành viên thành công.'
-            ]);
-        }
-    
-        return redirect()->route('user.index')->with('success', 'Cập nhật thành viên thành công.');
     }
 
     //Xử lý xóa thành viên
