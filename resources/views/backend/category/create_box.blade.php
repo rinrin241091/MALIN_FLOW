@@ -107,38 +107,38 @@ textarea.form-control {
     background-color: #fff;
     border-color: #ddd;
 }
-/* CSS cho disabled elements */
-.disabled-input {
+
+/* Style cho các trường disabled */
+input:disabled, 
+select:disabled, 
+textarea:disabled {
     background-color: #e9ecef !important;
     cursor: not-allowed;
-    opacity: 0.65;
 }
 
-.disabled-button {
-    opacity: 0.65;
+button:disabled {
     cursor: not-allowed;
+    opacity: 0.65;
 }
 
-/* CSS cho select phông khi chưa chọn */
-select[required]:invalid {
-    color: #999;
+/* Style cho label có dấu sao (*) */
+.required-field {
+    position: relative;
 }
 
-select[required] option[value=""] {
-    color: #999;
+.required-field::after {
+    content: '*';
+    color: red;
+    margin-left: 4px;
 }
 
-select[required] option {
-    color: #333;
+.select2-container--default.select2-container--disabled .select2-selection--single {
+    background-color: #e9ecef !important;
+    cursor: not-allowed;
 }
 </style>
 @endpush
 
 @push('scripts')
-<!-- Thêm jQuery nếu chưa có -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Thêm Toastr nếu chưa có -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<!-- File validation của chúng ta -->
-<script src="{{ asset('backend/js/category-form-validation.js') }}"></script>
+<script src="{{ asset('js/category-validation.js') }}"></script>
 @endpush

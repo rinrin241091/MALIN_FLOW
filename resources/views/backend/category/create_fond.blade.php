@@ -52,7 +52,6 @@
         </div>
     </div>
 </div>
-
 @push('styles')
 <style>
 .form-group {
@@ -92,5 +91,38 @@ textarea.form-control {
     background-color: #fff;
     border-color: #ddd;
 }
+
+/* Style cho các trường disabled */
+input:disabled, 
+select:disabled, 
+textarea:disabled {
+    background-color: #e9ecef !important;
+    cursor: not-allowed;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+/* Style cho label có dấu sao (*) */
+.required-field {
+    position: relative;
+}
+
+.required-field::after {
+    content: '*';
+    color: red;
+    margin-left: 4px;
+}
+
+.select2-container--default.select2-container--disabled .select2-selection--single {
+    background-color: #e9ecef !important;
+    cursor: not-allowed;
+}
 </style>
+@endpush
+
+@push('scripts')
+<script src="{{ asset('js/category-validation.js') }}"></script>
 @endpush
