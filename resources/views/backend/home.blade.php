@@ -46,7 +46,7 @@
                             <li><a class="dropdown-item" href="{{ route('settings') }}">{{ __('messages.settings') }}</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                                <form action="{{ route('logout') }}" method="POST">
+                                <form action="{{ route('auth.logout') }}" method="POST">
                                     @csrf
                                     <button type="submit" class="dropdown-item">Logout</button>
                                 </form>

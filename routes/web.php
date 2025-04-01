@@ -28,6 +28,7 @@ Route::get('/', function ()
 
 /*BACKEND ROUTES*/
 Route::get('dashboard/index', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth', 'role:admin');
+// Route::get('dashboard', [DashboardController::class, 'userDashboard'])->name('dashboard')->middleware('auth');
 
 /*USER */
 Route::get('user/index', [UserController::class, 'index'])->name('user.index')->middleware('auth', 'role:admin');
@@ -105,6 +106,10 @@ Route::prefix('category')->group(function () {
     Route::get('shelves/edit/{id}', [CategoryController::class, 'editShelf'])->name('category.editShelf')->middleware('auth', 'role:admin');
     Route::put('shelves/update/{id}', [CategoryController::class, 'updateShelf'])->name('category.updateShelf')->middleware('auth', 'role:admin');
     Route::delete('shelves/{id}', [CategoryController::class, 'destroyShelf'])->name('category.destroyShelf')->middleware('auth', 'role:admin');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/categories/list', [CategoryController::class, 'userList'])->name('categories.user-list');
 });
 
 

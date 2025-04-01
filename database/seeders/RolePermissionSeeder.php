@@ -23,7 +23,6 @@ class RolePermissionSeeder extends Seeder
         Permission::create(['name' => 'delete user']);
         Permission::create(['name' => 'add user']);
         Permission::create(['name' => 'view dashboard']);
-
         Permission::create(['name' => 'view home']);
 
         //Tạo quyèn quản lý hồ sơ

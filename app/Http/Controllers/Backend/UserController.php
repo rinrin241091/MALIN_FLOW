@@ -124,6 +124,8 @@ class UserController extends Controller
         ]);
 
         try {
+            DB::beginTransaction();
+            
             //Tạo người dùng mới
             $user = new User();
             $user->name = $validated['name'];
@@ -141,14 +143,20 @@ class UserController extends Controller
                     mkdir(public_path('avatars'), 0775, true);
                 }
                 $file->move(public_path('avatars'), $filename);
-                $user->image = 'avatars/' . $filename; // Bỏ dấu / ở đầu
+                $user->image = 'avatars/' . $filename;
             }
 
             $user->save();
+            
+            // Gán role "user" cho người dùng mới
+            $user->assignRole('user');
+
+            DB::commit();
 
             return redirect()->route('user.index')
                 ->with('success', 'Thêm thành viên thành công');
         } catch (\Exception $e) {
+            DB::rollBack();
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Đã xảy ra lỗi khi thêm thành viên: ' . $e->getMessage());

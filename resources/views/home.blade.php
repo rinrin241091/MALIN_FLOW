@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -98,7 +98,7 @@
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 text-center">
-                        <a href="aa.html">
+                        <a href="{{route('categories.user-list')}}">
                             <div class="card-body">
                                 <i class="fas fa-tags fa-3x mb-3 text-primary"></i>
                                 <h5 class="card-title">Quản lý danh mục</h5>

@@ -387,4 +387,28 @@ class CategoryController extends Controller
         $newNumber = $lastNumber + 1;
         return $prefix . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
     }
+
+    public function userList(Request $request)
+    {
+        $query = Category::with('fond');
+
+        // Search functionality
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('code', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhereHas('fond', function($q) use ($search) {
+                      $q->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $categories = $query->orderBy('created_at', 'desc')
+                           ->paginate(10)
+                           ->withQueryString();
+        
+        return view('backend.category.user-list', compact('categories'));
+    }
 }
