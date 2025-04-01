@@ -106,6 +106,14 @@ Route::prefix('category')->group(function () {
     Route::get('shelves/edit/{id}', [CategoryController::class, 'editShelf'])->name('category.editShelf')->middleware('auth', 'role:admin');
     Route::put('shelves/update/{id}', [CategoryController::class, 'updateShelf'])->name('category.updateShelf')->middleware('auth', 'role:admin');
     Route::delete('shelves/{id}', [CategoryController::class, 'destroyShelf'])->name('category.destroyShelf')->middleware('auth', 'role:admin');
+
+    // Hộp trên kệ
+    Route::get('boxes', [CategoryController::class, 'boxes'])->name('category.boxes')->middleware('auth', 'role:admin');
+    Route::get('boxes/create', [CategoryController::class, 'createBox'])->name('category.boxes.create')->middleware('auth', 'role:admin');
+    Route::post('boxes', [CategoryController::class, 'storeBox'])->name('category.boxes.store')->middleware('auth', 'role:admin');
+    Route::get('boxes/edit/{id}', [CategoryController::class, 'editBox'])->name('category.editBox')->middleware('auth', 'role:admin');
+    Route::put('boxes/update/{id}', [CategoryController::class, 'updateBox'])->name('category.updateBox')->middleware('auth', 'role:admin');
+    Route::delete('boxes/{id}', [CategoryController::class, 'destroyBox'])->name('category.destroyBox')->middleware('auth', 'role:admin');
 });
 
 Route::middleware(['auth'])->group(function () {

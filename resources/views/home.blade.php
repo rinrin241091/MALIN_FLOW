@@ -89,20 +89,10 @@
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 text-center">
-                        <div class="card-body">
-                            <i class="fas fa-users fa-3x mb-3 text-primary"></i>
-                            <h5 class="card-title">Quản lý người dùng và bảo mật</h5>
-                            <p class="card-text">Phân quyền linh hoạt, bảo mật đa lớp với mã hóa MD5.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 text-center">
                         <a href="{{route('categories.user-list')}}">
                             <div class="card-body">
                                 <i class="fas fa-tags fa-3x mb-3 text-primary"></i>
                                 <h5 class="card-title">Quản lý danh mục</h5>
-                                <p class="card-text">Tự động gán mã định danh theo quy định Bộ Nội Vụ.</p>
                             </div>
                         </a>
                     </div>
@@ -110,36 +100,8 @@
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 text-center">
                         <div class="card-body">
-                            <i class="fas fa-box fa-3x mb-3 text-primary"></i>
-                            <h5 class="card-title">Quản lý kho lưu trữ</h5>
-                            <p class="card-text">Quản lý tập trung giá, kệ, hộp lưu trữ, tối ưu không gian.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 text-center">
-                        <div class="card-body">
-                            <i class="fas fa-search fa-3x mb-3 text-primary"></i>
-                            <h5 class="card-title">Tìm kiếm thông minh</h5>
-                            <p class="card-text">Tìm kiếm nhanh chóng, chính xác với nhiều tiêu chí lọc.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 text-center">
-                        <div class="card-body">
                             <i class="fas fa-file-import fa-3x mb-3 text-primary"></i>
                             <h5 class="card-title">Biên mục và nhập liệu</h5>
-                            <p class="card-text">Nhập liệu từ Excel, biên mục trực quan, dễ sử dụng.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 text-center">
-                        <div class="card-body">
-                            <i class="fas fa-chart-bar fa-3x mb-3 text-primary"></i>
-                            <h5 class="card-title">Báo cáo và thống kê</h5>
-                            <p class="card-text">Dashboard trực quan, báo cáo đa dạng, cảnh báo hết hạn.</p>
                         </div>
                     </div>
                 </div>

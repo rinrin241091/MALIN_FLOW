@@ -42,7 +42,11 @@ class CategoryController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $code = $this->generateCode('FOND');
+        $code = $this->generateCode('FOND', Fond::class);
+        while (Fond::where('code', $code)->exists()) {
+            $code = $this->generateCode('FOND', Fond::class);
+        }
+
         Fond::create([
             'name' => $request->name,
             'code' => $code,
@@ -137,15 +141,19 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
-
-        $code = $this->generateCode('CAT');
+    
+        $code = $this->generateCode('CAT', Category::class);
+        while (Category::where('code', $code)->exists()) {
+            $code = $this->generateCode('CAT', Category::class);
+        }
+    
         Category::create([
             'fond_id' => $request->fond_id,
             'name' => $request->name,
             'code' => $code,
             'description' => $request->description,
         ]);
-
+    
         return redirect()->route('category.categories')->with('success', 'Thêm danh mục thành công!');
     }
 
@@ -226,7 +234,11 @@ class CategoryController extends Controller
             'capacity' => 'nullable|integer',
         ]);
 
-        $code = $this->generateCode('WH');
+        $code = $this->generateCode('WH', Warehouse::class);
+        while (Warehouse::where('code', $code)->exists()) {
+            $code = $this->generateCode('WH', Warehouse::class);
+        }
+
         Warehouse::create([
             'fond_id' => $request->fond_id,
             'name' => $request->name,
@@ -325,7 +337,11 @@ class CategoryController extends Controller
             'capacity' => 'nullable|integer',
         ]);
 
-        $code = $this->generateCode('SHELF');
+        $code = $this->generateCode('SHELF', Shelf::class);
+        while (Shelf::where('code', $code)->exists()) {
+            $code = $this->generateCode('SHELF', Shelf::class);
+        }
+
         Shelf::create([
             'warehouse_id' => $request->warehouse_id,
             'name' => $request->name,
@@ -380,10 +396,112 @@ class CategoryController extends Controller
         }
     }
 
-    private function generateCode($prefix)
+
+    // Hộp trên kệ
+    public function boxes(Request $request)
     {
-        $lastFond = Fond::orderBy('id', 'desc')->first();
-        $lastNumber = $lastFond ? intval(substr($lastFond->code, strlen($prefix))) : 0;
+        $search = $request->query('search');
+        $shelf_id = $request->query('shelf_id');
+        $boxes = Box::when($search, function ($query, $search) {
+            return $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('code', 'like', "%{$search}%");
+        })->when($shelf_id, function ($query, $shelf_id) {
+            return $query->where('shelf_id', $shelf_id);
+        })->paginate(20);
+
+        $shelves = Shelf::all();
+        $template = 'backend.category.boxes';
+        $title = 'Quản lý danh mục - Hộp trên kệ';
+        return view('backend.dashboard.layout', compact('boxes', 'shelves', 'shelf_id', 'template', 'title'));
+    }
+
+    public function createBox()
+    {
+        $shelves = Shelf::all();
+        $template = 'backend.category.create_box';
+        $title = 'Quản lý danh mục - Thêm mới hộp trên kệ';
+        return view('backend.dashboard.layout', compact('shelves', 'template', 'title'));
+    }
+
+    public function storeBox(Request $request)
+    {
+        $request->validate([
+            'shelf_id' => 'required|exists:shelves,id',
+            'name' => 'required|string|max:255',
+            'capacity' => 'nullable|integer',
+        ]);
+
+        $code = $this->generateCode('BOX', Box::class);
+        while (Box::where('code', $code)->exists()) {
+            $code = $this->generateCode('BOX', Box::class);
+        }
+
+        Box::create([
+            'shelf_id' => $request->shelf_id,
+            'name' => $request->name,
+            'code' => $code,
+            'capacity' => $request->capacity,
+        ]);
+
+        return redirect()->route('category.boxes')->with('success', 'Thêm hộp thành công!');
+    }
+
+    public function editBox($id)
+    {
+        $box = Box::findOrFail($id);
+        $shelves = Shelf::all();
+        $template = 'backend.category.update_box';
+        $title = 'Quản lý danh mục - Chỉnh sửa kệ trong kho';
+        return view('backend.dashboard.layout', compact('box', 'shelves', 'template', 'title'));
+    }
+
+    public function updateBox(Request $request, $id)
+    {
+        $request->validate([
+            'shelf_id' => 'required|exists:shelf,id',
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:50|unique:boxes,code,'.$id,
+            'capacity' => 'required|integer|min:1',
+            'description' => 'nullable|string'
+        ]);
+
+        $box = Box::findOrFail($id);
+        $box->update([
+            'shelf_id' => $request->shelf_id,
+            'name' => $request->name,
+            'code' => $request->code,
+            'capacity' => $request->capacity,
+            'description' => $request->description
+        ]);
+
+        return redirect()->route('category.boxes')->with('success', 'Cập nhật hộp thành công!');
+    }
+
+    public function destroyBox($id)
+    {
+        try {
+            $box = Box::findOrFail($id);
+            $box->delete();
+            return redirect()->route('category.boxes')
+                ->with('success', 'Xóa hộp thành công!');
+        } catch (\Exception $e) {
+            return redirect()->route('category.boxes')
+                ->with('error', 'Có lỗi xảy ra khi xóa hộp!');
+        }
+    }
+
+    private function generateCode($prefix, $modelClass)
+    {
+        $lastRecord = $modelClass::orderBy('id', 'desc')->first();
+        $lastNumber = 0;
+        
+        if ($lastRecord) {
+            $code = $lastRecord->code;
+            if (strpos($code, $prefix) === 0) {
+                $lastNumber = intval(substr($code, strlen($prefix))) ?: 0;
+            }
+        }
+        
         $newNumber = $lastNumber + 1;
         return $prefix . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
     }

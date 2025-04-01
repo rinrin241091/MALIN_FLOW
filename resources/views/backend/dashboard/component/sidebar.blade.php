@@ -31,15 +31,18 @@
                     <li class="{{ request()->routeIs('category.fonds') ? 'active' : '' }}">
                         <a href="{{ route('category.fonds') }}">Phông chỉnh lý</a>
                     </li>
-                    <li class="{{ request()->routeIs('category.categories') ? 'active' : '' }}">
-                        <a href="{{ route('category.categories') }}">Danh mục tài liệu</a>
-                    </li>
                     <li class="{{ request()->routeIs('category.warehouses') ? 'active' : '' }}">
-                        <a href="{{ route('category.warehouses') }}">Kho lưu trữ</a>
+                        <a href="{{ route('category.warehouses') }}">Kho</a>
                     </li>
                     <li class="{{ request()->routeIs('category.shelves') ? 'active' : '' }}">
-                        <a href="{{ route('category.shelves') }}">Kệ trong kho</a>
+                        <a href="{{ route('category.shelves') }}">Kệ</a>
                     </li>
+                    <li class="{{ request()->routeIs('category.boxes') ? 'active' : '' }}">
+                        <a href="{{ route('category.boxes') }}">Hộp</a>
+                    </li>
+                    <li class="{{ request()->routeIs('category.categories') ? 'active' : '' }}">
+                        <a href="{{ route('category.categories') }}">Danh mục tài liệu</a>
+                    </li>   
                 </ul>
             </li>
         </ul>
