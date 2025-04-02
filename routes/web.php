@@ -37,6 +37,7 @@ Route::get('user/index', [UserController::class, 'index'])->name('user.index')->
 //Đăng nhập, đăng xuất
 Route::prefix('auth')->group(function () {
     Route::get('admin', [AuthController::class, 'index'])->name('auth.admin')->middleware('login');
+    Route::get('login', [AuthController::class, 'index'])->name('auth.loginForm');
     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
     Route::post('login', [AuthController::class, 'login'])->name('auth.login');
 });

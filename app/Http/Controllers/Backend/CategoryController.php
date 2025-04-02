@@ -9,8 +9,12 @@ use App\Models\Warehouse;
 use App\Models\Shelf;
 use App\Models\Box;
 use App\Models\Record;
+use App\Models\Province;
+use App\Models\District;
+use App\Models\Ward;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
@@ -18,28 +22,88 @@ class CategoryController extends Controller
     public function fonds(Request $request)
     {
         $search = $request->query('search');
-        $fonds = Fond::when($search, function ($query, $search) {
-            return $query->where('name', 'like', "%{$search}%")
-                        ->orWhere('code', 'like', "%{$search}%");
-        })->paginate(20);
+        $province_id = $request->query('province_id');
+        
+        $fonds = Fond::with(['province', 'district', 'ward'])
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%")
+                            ->orWhere('code', 'like', "%{$search}%");
+            })
+            ->when($province_id, function ($query, $province_id) {
+                return $query->where('province_id', $province_id);
+            })
+            ->paginate(20);
 
+        $provinces = Province::all();
         $template = 'backend.category.fonds';
         $title = 'Quản lý danh mục - Phông chỉnh lý';
-        return view('backend.dashboard.layout', compact('fonds', 'template', 'title'));
+        
+        return view('backend.dashboard.layout', compact('fonds', 'provinces', 'province_id', 'template', 'title'));
     }
 
+    // Trang thêm mới phông
     public function createFond()
     {
+        $provinces = Province::all();
         $template = 'backend.category.create_fond';
         $title = 'Quản lý danh mục - Thêm mới phông chỉnh lý';
-        return view('backend.dashboard.layout', compact('template', 'title'));
+        return view('backend.dashboard.layout', compact('provinces', 'template', 'title'));
     }
 
+    public function getDistricts($provinceId)
+{
+    try {
+        Log::info('[DEBUG] Fetching districts for province_id: ' . $provinceId);
+
+        $districts = District::where('province_id', $provinceId)
+                           ->select('district_id', 'name')
+                           ->get();
+        
+        Log::info('[DEBUG] Districts query executed. Total districts found: ' . $districts->count());
+        Log::info('[DEBUG] Districts data: ' . json_encode($districts->toArray()));
+
+        return response()->json($districts);
+    } catch (\Exception $e) {
+        Log::error('[ERROR] Error in getDistricts for province_id: ' . $provinceId);
+        Log::error('[ERROR] Exception message: ' . $e->getMessage());
+        Log::error('[ERROR] Stack trace: ' . $e->getTraceAsString());
+
+        return response()->json(['error' => 'An error occurred while fetching districts'], 500);
+    }
+}
+
+public function getWards($districtId)
+{
+    try {
+        Log::info('[DEBUG] Fetching wards for district_id: ' . $districtId);
+
+        $wards = Ward::where('district_id', $districtId)
+                    ->select('wards_id', 'name')
+                    ->get();
+        
+        Log::info('[DEBUG] Wards query executed. Total wards found: ' . $wards->count());
+        Log::info('[DEBUG] Wards data: ' . json_encode($wards->toArray()));
+
+        return response()->json($wards);
+    } catch (\Exception $e) {
+        Log::error('[ERROR] Error in getWards for district_id: ' . $districtId);
+        Log::error('[ERROR] Exception message: ' . $e->getMessage());
+        Log::error('[ERROR] Stack trace: ' . $e->getTraceAsString());
+
+        return response()->json(['error' => 'An error occurred while fetching wards'], 500);
+    }
+}
+
+    // Xử lý thêm mới phông
     public function storeFond(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:fonds,name',
             'description' => 'nullable|string',
+            'address' => 'nullable|string',
+            'province_id' => 'nullable|exists:province,province_id',
+            'district_id' => 'nullable|exists:district,district_id',
+            'wards_id' => 'nullable|exists:wards,wards_id',
         ]);
 
         $code = $this->generateCode('FOND', Fond::class);
@@ -51,37 +115,58 @@ class CategoryController extends Controller
             'name' => $request->name,
             'code' => $code,
             'description' => $request->description,
+            'address' => $request->address,
+            'province_id' => $request->province_id,
+            'district_id' => $request->district_id,
+            'wards_id' => $request->wards_id,
         ]);
 
         return redirect()->route('category.fonds')->with('success', 'Thêm phông thành công!');
     }
 
+    // Trang chỉnh sửa phông
     public function editFond($id)
     {
         $fond = Fond::findOrFail($id);
+        $provinces = Province::all();
+        $districts = District::where('province_id', $fond->province_id)->get();
+        $wards = Ward::where('district_id', $fond->district_id)->get();
+        
         $template = 'backend.category.update_fond';
         $title = 'Quản lý danh mục - Chỉnh sửa phông chỉnh lý';
-        return view('backend.dashboard.layout', compact('fond', 'template', 'title'));
+        
+        return view('backend.dashboard.layout', 
+            compact('fond', 'provinces', 'districts', 'wards', 'template', 'title'));
     }
 
+    // Xử lý cập nhật phông
     public function updateFond(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:fonds,name,'.$id,
             'code' => 'required|string|max:50|unique:fonds,code,'.$id,
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
+            'address' => 'nullable|string',
+            'province_id' => 'nullable|exists:province,province_id',
+            'district_id' => 'nullable|exists:district,district_id',
+            'wards_id' => 'nullable|exists:wards,wards_id',
         ]);
 
         $fond = Fond::findOrFail($id);
         $fond->update([
             'name' => $request->name,
             'code' => $request->code,
-            'description' => $request->description
+            'description' => $request->description,
+            'address' => $request->address,
+            'province_id' => $request->province_id,
+            'district_id' => $request->district_id,
+            'wards_id' => $request->wards_id,
         ]);
 
         return redirect()->route('category.fonds')->with('success', 'Cập nhật phông thành công!');
     }
 
+    // Xóa phông
     public function destroyFond($id)
     {
         try {

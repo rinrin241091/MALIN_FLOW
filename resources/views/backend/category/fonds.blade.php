@@ -44,6 +44,7 @@
                                     <th class="text-center">Tên phông</th>
                                     <th class="text-center">Mã định danh</th>
                                     <th class="text-center">Mô tả</th>
+                                    <th class="text-center">Địa chỉ</th>
                                     <th class="text-center">Thao tác</th>
                                 </tr>
                             </thead>
@@ -64,6 +65,17 @@
                                                 {{ $fond->description ?? 'N/A' }}
                                             </td>
                                             <td class="text-center">
+                                                @php
+                                                    $addressParts = [];
+                                                    if($fond->address) $addressParts[] = $fond->address;
+                                                    if($fond->ward && $fond->ward->name) $addressParts[] = $fond->ward->name;
+                                                    if($fond->district && $fond->district->name) $addressParts[] = $fond->district->name;
+                                                    if($fond->province && $fond->province->name) $addressParts[] = $fond->province->name;
+                                                    $fullAddress = implode(', ', array_filter($addressParts));
+                                                @endphp
+                                                {{ $fullAddress ?: 'N/A' }}
+                                            </td>
+                                            <td class="text-center">
                                                 <a href="{{ route('category.editFond', $fond->id) }}" class="btn btn-success"><i class="fa fa-edit"></i></a>
                                                 <form action="{{ route('category.destroyFond', ['id' => $fond->id])}}" method="POST" style="display:inline;">
                                                     @csrf
@@ -77,7 +89,7 @@
                                     @endforeach
                                 @else
                                     <tr>
-                                        <td colspan="5" class="text-center">Không tìm thấy phông nào.</td>
+                                        <td colspan="6" class="text-center">Không tìm thấy phông nào.</td>
                                     </tr>    
                                 @endif
                             </tbody>

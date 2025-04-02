@@ -77,7 +77,7 @@
             <h1 class="display-4 fw-bold">Quản lý tài liệu thông minh với MALIN FLOW</h1>
             <p class="lead my-4">Số hóa và tự động hóa quy trình chỉnh lý tài liệu, giúp tiết kiệm thời gian, chi phí và nâng cao hiệu quả quản lý.</p>
             @guest
-                <a href="{{ route('auth.login') }}" class="btn btn-primary">Dùng thử ngay</a>
+                <a href="{{ route('auth.admin') }}" class="btn btn-primary">Dùng thử ngay</a>
             @endguest
         </div>
     </section>

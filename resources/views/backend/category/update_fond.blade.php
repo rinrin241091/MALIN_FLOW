@@ -50,6 +50,54 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                        
+                        <div class="form-group">
+                            <label for="province_id">Tỉnh/Thành phố</label>
+                            <select class="form-control" id="province_id" name="province_id">
+                                <option value="">Chọn tỉnh/thành phố</option>
+                                @foreach($provinces as $province)
+                                    <option value="{{ $province->province_id }}" 
+                                        {{ old('province_id', $fond->province_id) == $province->province_id ? 'selected' : '' }}>
+                                        {{ $province->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="district_id">Quận/Huyện</label>
+                            <select class="form-control" id="district_id" name="district_id">
+                                <option value="">Chọn quận/huyện</option>
+                                @if($fond->district_id)
+                                    @foreach($districts as $district)
+                                        <option value="{{ $district->district_id }}" 
+                                            {{ old('district_id', $fond->district_id) == $district->district_id ? 'selected' : '' }}>
+                                            {{ $district->name }}
+                                        </option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="wards_id">Phường/Xã</label>
+                            <select class="form-control" id="wards_id" name="wards_id">
+                                <option value="">Chọn phường/xã</option>
+                                @if($fond->wards_id)
+                                    @foreach($wards as $ward)
+                                        <option value="{{ $ward->wards_id }}" 
+                                            {{ old('wards_id', $fond->wards_id) == $ward->wards_id ? 'selected' : '' }}>
+                                            {{ $ward->name }}
+                                        </option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Địa chỉ chi tiết</label>
+                            <input type="text" class="form-control" id="address" name="address" value="{{ old('address', $fond->address) }}">
+                        </div>
 
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
@@ -134,4 +182,41 @@ button:disabled {
 
 @push('scripts')
 <script src="{{ asset('js/category-validation.js') }}"></script>
+<script>
+$(document).ready(function() {
+    // Xử lý khi chọn tỉnh/thành phố
+    $('#province_id').change(function() {
+        var provinceId = $(this).val();
+        if(provinceId) {
+            $.get('{{ url("/api/district") }}/' + provinceId, function(data) {
+                var html = '<option value="">Chọn quận/huyện</option>';
+                data.forEach(function(district) {
+                    html += `<option value="${district.district_id}">${district.name}</option>`;
+                });
+                $('#district_id').html(html);
+                $('#wards_id').html('<option value="">Chọn phường/xã</option>');
+            });
+        } else {
+            $('#district_id').html('<option value="">Chọn quận/huyện</option>');
+            $('#wards_id').html('<option value="">Chọn phường/xã</option>');
+        }
+    });
+
+    // Xử lý khi chọn quận/huyện
+    $('#district_id').change(function() {
+        var districtId = $(this).val();
+        if(districtId) {
+            $.get('{{ url("/api/ward") }}/' + districtId, function(data) {
+                var html = '<option value="">Chọn phường/xã</option>';
+                data.forEach(function(ward) {
+                    html += `<option value="${ward.wards_id}">${ward.name}</option>`;
+                });
+                $('#wards_id').html(html);
+            });
+        } else {
+            $('#wards_id').html('<option value="">Chọn phường/xã</option>');
+        }
+    });
+});
+</script>
 @endpush
