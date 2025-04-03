@@ -44,59 +44,7 @@
                 <div class="ibox-content">
                     @include('backend.user.component.filters.filterDashboard')
                     
-                    <!-- Form cho bulk actions -->
-                    <form id="bulk-action-form" action="{{ route('user.bulkDelete') }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            <input type="checkbox" id="checkAll">
-                                        </th>
-                                        <th>STT</th>
-                                        <th>Họ tên</th>
-                                        <th>Email</th>
-                                        <th>Số điện thoại</th>
-                                        <th>Trạng thái</th>
-                                        <th>Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($users as $key => $user)
-                                    <tr>
-                                        <td>
-                                            <input type="checkbox" class="checkBoxItem" value="{{ $user->id }}">
-                                        </td>
-                                        <td>{{ $key + 1 }}</td>
-                                        <td>{{ $user->name }}</td>
-                                        <td>{{ $user->email }}</td>
-                                        <td>{{ $user->phone }}</td>
-                                        <td>
-                                            @if($user->status)
-                                                <span class="label label-primary">Hoạt động</span>
-                                            @else
-                                                <span class="label label-danger">Khóa</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @can('edit user')
-                                            <a href="{{ route('user.edit', $user->id) }}" class="btn btn-primary btn-xs">
-                                                <i class="fa fa-edit"></i> Sửa
-                                            </a>
-                                            @endcan
-                                            @can('delete user')
-                                            <button type="button" class="btn btn-danger btn-xs delete-user" data-id="{{ $user->id }}">
-                                                <i class="fa fa-trash"></i> Xóa
-                                            </button>
-                                            @endcan
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                    @include('backend.user.component.tables.tableDashboard')
                         <div class="row">
                             <div class="col-md-6">
                                 <span id="selected-count">Đã chọn: 0 thành viên</span>
