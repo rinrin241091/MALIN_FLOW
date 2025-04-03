@@ -1,5 +1,5 @@
 <!-- jQuery -->
-<script src="{{ asset('backend/js/jquery-2.1.1.js') }}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- Bootstrap -->
 <script src="{{ asset('backend/js/bootstrap.min.js') }}"></script>
@@ -18,7 +18,6 @@
 <script src="{{ asset('backend/js/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
 
 <script src="{{ asset('backend/library/library.js') }}"></script>
-<script src="{{ asset('backend/js/bulk-actions.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- Initialize metisMenu -->

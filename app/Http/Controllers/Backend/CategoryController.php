@@ -49,50 +49,22 @@ class CategoryController extends Controller
         $title = 'Quản lý danh mục - Thêm mới phông chỉnh lý';
         return view('backend.dashboard.layout', compact('provinces', 'template', 'title'));
     }
-
     public function getDistricts($provinceId)
-{
-    try {
-        Log::info('[DEBUG] Fetching districts for province_id: ' . $provinceId);
-
+    {
         $districts = District::where('province_id', $provinceId)
-                           ->select('district_id', 'name')
-                           ->get();
-        
-        Log::info('[DEBUG] Districts query executed. Total districts found: ' . $districts->count());
-        Log::info('[DEBUG] Districts data: ' . json_encode($districts->toArray()));
-
+                        ->select('district_id', 'name')
+                        ->get();
         return response()->json($districts);
-    } catch (\Exception $e) {
-        Log::error('[ERROR] Error in getDistricts for province_id: ' . $provinceId);
-        Log::error('[ERROR] Exception message: ' . $e->getMessage());
-        Log::error('[ERROR] Stack trace: ' . $e->getTraceAsString());
-
-        return response()->json(['error' => 'An error occurred while fetching districts'], 500);
     }
-}
 
-public function getWards($districtId)
-{
-    try {
-        Log::info('[DEBUG] Fetching wards for district_id: ' . $districtId);
-
+    public function getWards($districtId)
+    {
         $wards = Ward::where('district_id', $districtId)
                     ->select('wards_id', 'name')
                     ->get();
-        
-        Log::info('[DEBUG] Wards query executed. Total wards found: ' . $wards->count());
-        Log::info('[DEBUG] Wards data: ' . json_encode($wards->toArray()));
-
         return response()->json($wards);
-    } catch (\Exception $e) {
-        Log::error('[ERROR] Error in getWards for district_id: ' . $districtId);
-        Log::error('[ERROR] Exception message: ' . $e->getMessage());
-        Log::error('[ERROR] Stack trace: ' . $e->getTraceAsString());
-
-        return response()->json(['error' => 'An error occurred while fetching wards'], 500);
     }
-}
+
 
     // Xử lý thêm mới phông
     public function storeFond(Request $request)

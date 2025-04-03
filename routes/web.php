@@ -76,6 +76,10 @@ Route::prefix('settings')->group(function () {
 
 //Quản lý danh mục
 Route::prefix('category')->group(function () {
+    // API routes for location
+    Route::get('/districts/{provinceId}', [CategoryController::class, 'getDistricts'])->name('api.districts')->middleware('auth');
+    Route::get('/wards/{districtId}', [CategoryController::class, 'getWards'])->name('api.wards')->middleware('auth');
+
     // Phông Chỉnh Lý
     Route::get('fonds', [CategoryController::class, 'fonds'])->name('category.fonds')->middleware('auth', 'role:admin');
     Route::get('fonds/create', [CategoryController::class, 'createFond'])->name('category.fonds.create')->middleware('auth', 'role:admin');
