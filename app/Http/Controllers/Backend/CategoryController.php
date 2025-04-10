@@ -12,6 +12,8 @@ use App\Models\Record;
 use App\Models\Province;
 use App\Models\District;
 use App\Models\Ward;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\RecordsImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
@@ -585,5 +587,55 @@ class CategoryController extends Controller
                            ->withQueryString();
         
         return view('backend.category.user-list', compact('categories'));
+    }
+
+    //Biên mục tài liệu
+    public function createRecord($id)
+    {
+        $fond = Fond::findOrFail($id);
+        $template = 'backend.category.create_record';
+        $title = 'Quản lí danh mục - Biên mục tài liệu';
+        return view('backend.dashboard.layout', compact('fond', 'template', 'title'));
+    }
+
+    public function storeRecord(Request $request)
+    {
+        $request->validate([
+            'title' => 'require|string|max:255',
+            'author' => 'nullable|string|max:255',
+            'create_date' => 'nullable|date',
+            'description' => 'nullable|string',
+        ]);
+
+        $fond = Fond::findOrFail($id);
+        $code = $this->generateCode('RECORD', Record::class);
+        while (Record::where('code', $code)->exists())
+        {
+            $code = $this->generateCode('RECORD', Record::class);
+        }
+
+        Record::create([
+            'fond_id' => $fond->id,
+            'title' => $request->title,
+            'author' => $request->author,
+            'create_date' => $request->create_date,
+            'description' => $request->description,
+            'code' => $code
+        ]);
+
+        return redirect()->route('category.fonds')->with('success', 'Biên mục tài liệu thành công!');
+    }
+
+    //Xử lý nhập từ excel
+    public function importRecords(Request $request, $id)
+    {   
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls',
+        ]);
+
+        $fond = Fond::findOrFail($id);
+        Excell::import(new RecordsImport($fond->id), $request->file('excel_file'));
+
+        return redirect()->route('category.fonds')->with('success', 'Nhập liệu file excel thành công!');
     }
 }

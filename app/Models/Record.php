@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Record extends Model
 {
     use HasFactory;
-    protected $fillable = ['box_id', 'title', 'code', 'description', 'page_count'];
+    protected $fillable = ['fond_id', 'title', 'author', 'created_date', 'description', 'code'];
 
     public function box()
     {

@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('records', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('box_id')->constrained()->onDelete('cascade'); // Liên kết với hộp
-            $table->string('title'); // Tiêu đề hồ sơ
-            $table->string('code')->unique(); // Mã định danh hồ sơ
-            $table->text('description')->nullable();
-            $table->integer('page_count')->nullable(); // Số trang
+            $table->foreignId('fond_id')->constrained('fonds')->onDelete('cascade'); // Liên kết với phông chỉnh lý
+            $table->string('title'); // Tiêu đề tài liệu
+            $table->string('author')->nullable(); // Tác giả
+            $table->date('created_date')->nullable(); // Ngày tạo
+            $table->text('description')->nullable(); // Mô tả
+            $table->string('code')->unique(); // Mã định danh tài liệu
             $table->timestamps();
         });
     }

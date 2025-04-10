@@ -125,6 +125,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/categories/list', [CategoryController::class, 'userList'])->name('categories.user-list');
 });
 
+Route::get('fonds/{id}/records/create', [CategoryController::class, 'createRecord'])->name('category.records.create');
+Route::post('fonds/{id}/records', [CategoryController::class, 'storeRecord'])->name('category.records.store');
+Route::post('fonds/{id}/records/import', [CategoryController::class, 'importRecords'])->name('category.records.import');
+
 
 
 

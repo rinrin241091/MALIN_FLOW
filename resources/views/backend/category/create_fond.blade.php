@@ -96,6 +96,17 @@
 
 @push('styles')
 <style>
+/* Thêm style cho active menu item */
+.nav-item.active,
+.nav-item:hover {
+    background-color: #1ab394;
+}
+
+.nav-item.active a,
+.nav-item:hover a {
+    color: white !important;
+}
+
 .form-group {
     margin-bottom: 20px;
 }
@@ -168,7 +179,7 @@ button:disabled {
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(function() {
+$(document).ready(function() {
     // Thêm CSRF token vào tất cả AJAX requests
     $.ajaxSetup({
         headers: {
@@ -176,64 +187,70 @@ $(function() {
         }
     });
 
-    // Comment lại code AJAX để fix sau
-    /*
-    $('#province_id').change(function() {
-        let provinceId = $(this).val();
+    // Xử lý khi chọn tỉnh/thành phố
+    $('#province_id').on('change', function() {
+        var provinceId = $(this).val();
         console.log('Selected province:', provinceId);
-
-        $.ajax({
-            url: '/category/districts/' + provinceId,
-            type: 'GET',
-            success: function(data) {
-                if (data && data.length > 0) {
-                    let html = '<option value="">Chọn quận/huyện</option>';
-                    data.forEach(function(item) {
-                        html += `<option value="${item.district_id}">${item.name}</option>`;
-                    });
-                    $('#district_id').html(html);
-                    $('#district_id').prop('disabled', false);
-                } else {
-                    $('#district_id').html('<option value="">Không có quận/huyện</option>');
-                    $('#district_id').prop('disabled', true);
+        
+        if(provinceId) {
+            $.ajax({
+                url: '/category/districts/' + provinceId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if(data && data.length > 0) {
+                        let html = '<option value="">Chọn quận/huyện</option>';
+                        data.forEach(function(district) {
+                            html += `<option value="${district.district_id}">${district.name}</option>`;
+                        });
+                        $('#district_id').html(html).prop('disabled', false);
+                    } else {
+                        $('#district_id').html('<option value="">Không có quận/huyện</option>').prop('disabled', true);
+                    }
+                    // Reset wards dropdown
+                    $('#wards_id').html('<option value="">Chọn phường/xã</option>').prop('disabled', true);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error loading districts:', error);
+                    alert('Có lỗi xảy ra khi tải danh sách quận/huyện');
                 }
-                $('#wards_id').html('<option value="">Chọn phường/xã</option>');
-                $('#wards_id').prop('disabled', true);
-            },
-            error: function(xhr, status, error) {
-                console.error('Error loading districts:', error);
-                alert('Có lỗi xảy ra khi tải danh sách quận/huyện. Vui lòng thử lại.');
-            }
-        });
+            });
+        } else {
+            $('#district_id').html('<option value="">Chọn quận/huyện</option>').prop('disabled', true);
+            $('#wards_id').html('<option value="">Chọn phường/xã</option>').prop('disabled', true);
+        }
     });
 
-    $('#district_id').change(function() {
-        let districtId = $(this).val();
+    // Xử lý khi chọn quận/huyện
+    $('#district_id').on('change', function() {
+        var districtId = $(this).val();
         console.log('Selected district:', districtId);
-
-        $.ajax({
-            url: '/category/wards/' + districtId,
-            type: 'GET',
-            success: function(data) {
-                if (data && data.length > 0) {
-                    let html = '<option value="">Chọn phường/xã</option>';
-                    data.forEach(function(item) {
-                        html += `<option value="${item.wards_id}">${item.name}</option>`;
-                    });
-                    $('#wards_id').html(html);
-                    $('#wards_id').prop('disabled', false);
-                } else {
-                    $('#wards_id').html('<option value="">Không có phường/xã</option>');
-                    $('#wards_id').prop('disabled', true);
+        
+        if(districtId) {
+            $.ajax({
+                url: '/category/wards/' + districtId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if(data && data.length > 0) {
+                        let html = '<option value="">Chọn phường/xã</option>';
+                        data.forEach(function(ward) {
+                            html += `<option value="${ward.wards_id}">${ward.name}</option>`;
+                        });
+                        $('#wards_id').html(html).prop('disabled', false);
+                    } else {
+                        $('#wards_id').html('<option value="">Không có phường/xã</option>').prop('disabled', true);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error loading wards:', error);
+                    alert('Có lỗi xảy ra khi tải danh sách phường/xã');
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error loading wards:', error);
-                alert('Có lỗi xảy ra khi tải danh sách phường/xã. Vui lòng thử lại.');
-            }
-        });
+            });
+        } else {
+            $('#wards_id').html('<option value="">Chọn phường/xã</option>').prop('disabled', true);
+        }
     });
-    */
 });
 </script>
 @endpush
