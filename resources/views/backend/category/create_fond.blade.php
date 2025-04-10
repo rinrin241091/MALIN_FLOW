@@ -44,8 +44,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="province_id">Tỉnh/Thành phố <span class="text-danger">*</span></label>
-                            <select name="province_id" id="province_id" class="form-control" required>
+                            <label for="province_id">Tỉnh/Thành phố</label>
+                            <select name="province_id" id="province_id" class="form-control">
                                 <option value="">Chọn tỉnh/thành phố</option>
                                 @foreach($provinces as $province)
                                     <option value="{{ $province->province_id }}" {{ old('province_id') == $province->province_id ? 'selected' : '' }}>
@@ -59,8 +59,8 @@
                         </div>
     
                         <div class="form-group">
-                            <label for="district_id">Quận/Huyện <span class="text-danger">*</span></label>
-                            <select name="district_id" id="district_id" class="form-control" required>
+                            <label for="district_id">Quận/Huyện</label>
+                            <select name="district_id" id="district_id" class="form-control">
                                 <option value="">Chọn quận/huyện</option>
                             </select>
                             @error('district_id')
@@ -69,8 +69,8 @@
                         </div>
     
                         <div class="form-group">
-                            <label for="wards_id">Phường/Xã <span class="text-danger">*</span></label>
-                            <select name="wards_id" id="wards_id" class="form-control" required>
+                            <label for="wards_id">Phường/Xã</label>
+                            <select name="wards_id" id="wards_id" class="form-control">
                                 <option value="">Chọn phường/xã</option>
                             </select>
                             @error('wards_id')
@@ -80,12 +80,12 @@
 
                         <div class="form-group">
                             <label for="address">Địa chỉ chi tiết</label>
-                            <input type="text" class="form-control" id="address" name="address">
+                            <input type="text" class="form-control" id="address" name="address" value="{{ old('address') }}">
                         </div>
 
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Lưu</button>
-                            <a href="{{ route('category.fonds') }}" class="btn btn-default">Hủy</a>
+                            <a href="{{ route('category.fonds') }}" class="btn btn-default">Quay lại</a>
                         </div>
                     </form>
                 </div>
@@ -166,7 +166,6 @@ button:disabled {
 @endpush
 
 @push('scripts')
-<!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(function() {
@@ -177,32 +176,29 @@ $(function() {
         }
     });
 
+    // Comment lại code AJAX để fix sau
+    /*
     $('#province_id').change(function() {
-        let $this = $(this);
-        let provinceId = $this.val();
+        let provinceId = $(this).val();
         console.log('Selected province:', provinceId);
 
         $.ajax({
             url: '/category/districts/' + provinceId,
-            data: {
-                province_id: provinceId
-            },
+            type: 'GET',
             success: function(data) {
                 if (data && data.length > 0) {
-                    let options = '';
-                    data.map((item, index) => {
-                        options += `<option value="${item.district_id}">${item.name}</option>`;
+                    let html = '<option value="">Chọn quận/huyện</option>';
+                    data.forEach(function(item) {
+                        html += `<option value="${item.district_id}">${item.name}</option>`;
                     });
-                    $('#district_id').html('<option value="">Chọn quận/huyện</option>' + options);
+                    $('#district_id').html(html);
                     $('#district_id').prop('disabled', false);
                 } else {
                     $('#district_id').html('<option value="">Không có quận/huyện</option>');
                     $('#district_id').prop('disabled', true);
                 }
-                // Reset phường/xã
                 $('#wards_id').html('<option value="">Chọn phường/xã</option>');
                 $('#wards_id').prop('disabled', true);
-                console.log('Districts loaded:', data);
             },
             error: function(xhr, status, error) {
                 console.error('Error loading districts:', error);
@@ -212,31 +208,32 @@ $(function() {
     });
 
     $('#district_id').change(function() {
-        let $this = $(this);
-        let districtId = $this.val();
+        let districtId = $(this).val();
         console.log('Selected district:', districtId);
 
         $.ajax({
             url: '/category/wards/' + districtId,
-            data: {
-                district_id: districtId
-            },
+            type: 'GET',
             success: function(data) {
                 if (data && data.length > 0) {
-                    let options = '';
-                    data.map((item, index) => {
-                        options += `<option value="${item.wards_id}">${item.name}</option>`;
+                    let html = '<option value="">Chọn phường/xã</option>';
+                    data.forEach(function(item) {
+                        html += `<option value="${item.wards_id}">${item.name}</option>`;
                     });
-                    $('#wards_id').html('<option value="">Chọn phường/xã</option>' + options);
+                    $('#wards_id').html(html);
                     $('#wards_id').prop('disabled', false);
                 } else {
                     $('#wards_id').html('<option value="">Không có phường/xã</option>');
                     $('#wards_id').prop('disabled', true);
                 }
-                console.log('Wards loaded:', data);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error loading wards:', error);
+                alert('Có lỗi xảy ra khi tải danh sách phường/xã. Vui lòng thử lại.');
             }
         });
     });
+    */
 });
 </script>
 @endpush
