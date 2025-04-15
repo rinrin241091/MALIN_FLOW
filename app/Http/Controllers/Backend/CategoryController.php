@@ -28,8 +28,8 @@ class CategoryController extends Controller
         
         $fonds = Fond::with(['province', 'district', 'ward'])
             ->when($search, function ($query, $search) {
-                return $query->where('name', 'like', "%{$search}%")
-                            ->orWhere('code', 'like', "%{$search}%");
+            return $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('code', 'like', "%{$search}%");
             })
             ->when($province_id, function ($query, $province_id) {
                 return $query->where('province_id', $province_id);
@@ -200,7 +200,7 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
-    
+
         $code = $this->generateCode('CAT', Category::class);
         while (Category::where('code', $code)->exists()) {
             $code = $this->generateCode('CAT', Category::class);
@@ -212,7 +212,7 @@ class CategoryController extends Controller
             'code' => $code,
             'description' => $request->description,
         ]);
-    
+
         return redirect()->route('category.categories')->with('success', 'Thêm danh mục thành công!');
     }
 
@@ -598,44 +598,61 @@ class CategoryController extends Controller
         return view('backend.dashboard.layout', compact('fond', 'template', 'title'));
     }
 
-    public function storeRecord(Request $request)
+    public function storeRecord(Request $request, $id)
     {
         $request->validate([
-            'title' => 'require|string|max:255',
+            'title' => 'required|string|max:255',
             'author' => 'nullable|string|max:255',
-            'create_date' => 'nullable|date',
+            'created_date' => 'nullable|date',
             'description' => 'nullable|string',
         ]);
 
-        $fond = Fond::findOrFail($id);
-        $code = $this->generateCode('RECORD', Record::class);
-        while (Record::where('code', $code)->exists())
-        {
-            $code = $this->generateCode('RECORD', Record::class);
+        try {
+            $fond = Fond::findOrFail($id);
+            
+            // Tạo mã định danh
+            $lastRecord = Record::orderBy('id', 'desc')->first();
+            $lastNumber = $lastRecord ? (intval(substr($lastRecord->code, 6)) ?: 0) + 1 : 1;
+            $code = 'RECORD' . str_pad($lastNumber, 4, '0', STR_PAD_LEFT);
+
+            $record = new Record([
+                'fond_id' => $fond->id,
+                'title' => $request->title,
+                'author' => $request->author,
+                'created_date' => $request->created_date,
+                'description' => $request->description,
+                'code' => $code
+            ]);
+
+            $record->save();
+
+            return redirect()->route('category.records.create', $id)
+                ->with('success', 'Biên mục tài liệu đã được tạo thành công.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Có lỗi xảy ra khi tạo biên mục tài liệu: ' . $e->getMessage())
+                ->withInput();
         }
-
-        Record::create([
-            'fond_id' => $fond->id,
-            'title' => $request->title,
-            'author' => $request->author,
-            'create_date' => $request->create_date,
-            'description' => $request->description,
-            'code' => $code
-        ]);
-
-        return redirect()->route('category.fonds')->with('success', 'Biên mục tài liệu thành công!');
     }
 
     //Xử lý nhập từ excel
     public function importRecords(Request $request, $id)
     {   
-        $request->validate([
-            'excel_file' => 'required|file|mimes:xlsx,xls',
-        ]);
+        try {
+            $request->validate([
+                'excel_file' => 'required|file|mimes:xlsx,xls',
+            ]);
 
-        $fond = Fond::findOrFail($id);
-        Excell::import(new RecordsImport($fond->id), $request->file('excel_file'));
+            $fond = Fond::findOrFail($id);
+            
+            Excel::import(new RecordsImport($fond->id), $request->file('excel_file'));
 
-        return redirect()->route('category.fonds')->with('success', 'Nhập liệu file excel thành công!');
+            return redirect()->route('category.fonds')
+                ->with('success', 'Nhập liệu file excel thành công!');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Có lỗi xảy ra khi nhập file: ' . $e->getMessage())
+                ->withInput();
+        }
     }
 }

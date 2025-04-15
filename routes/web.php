@@ -5,7 +5,9 @@ use App\Http\Controllers\Backend\AuthController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\CategoryController;
+use App\Http\Controllers\Backend\RecordController;
 use App\Http\Middleware\AuthenticateMiddleware;
+use App\Http\Controllers\Backend\DocumentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -123,11 +125,34 @@ Route::prefix('category')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/categories/list', [CategoryController::class, 'userList'])->name('categories.user-list');
+
+    // Records Management Routes
+    Route::prefix('records')->name('records.')->group(function () {
+        Route::get('/', [RecordController::class, 'index'])->name('index');
+        Route::get('/create', [RecordController::class, 'create'])->name('create');
+        Route::post('/', [RecordController::class, 'store'])->name('store');
+        Route::get('/{record}/edit', [RecordController::class, 'edit'])->name('edit');
+        Route::put('/{record}', [RecordController::class, 'update'])->name('update');
+        Route::delete('/{record}', [RecordController::class, 'destroy'])->name('destroy');
+        Route::get('/import', [RecordController::class, 'showImportForm'])->name('import');
+        Route::post('/import', [RecordController::class, 'import'])->name('import.store');
+    });
 });
 
 Route::get('fonds/{id}/records/create', [CategoryController::class, 'createRecord'])->name('category.records.create');
 Route::post('fonds/{id}/records', [CategoryController::class, 'storeRecord'])->name('category.records.store');
 Route::post('fonds/{id}/records/import', [CategoryController::class, 'importRecords'])->name('category.records.import');
+
+Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
+    // Document Management Routes
+    Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
+    Route::get('/documents/create', [DocumentController::class, 'create'])->name('documents.create');
+    Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store');
+    Route::get('/documents/{document}/edit', [DocumentController::class, 'edit'])->name('documents.edit');
+    Route::put('/documents/{document}', [DocumentController::class, 'update'])->name('documents.update');
+    Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
+    Route::post('/documents/import', [DocumentController::class, 'import'])->name('documents.import');
+});
 
 
 

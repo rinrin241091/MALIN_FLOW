@@ -52,7 +52,6 @@
                                     <th class="text-center">Mã định danh</th>
                                     <th class="text-center">Mô tả</th>
                                     <th class="text-center">Thao tác</th>
-                                    <th class="text-center">Biên mục tài liệu</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -83,10 +82,6 @@
                                                         <i class="fa fa-trash"></i>
                                                     </button>
                                                 </form>
-                                            </td>
-                                            <td>
-                                                <a href="{{ route('category.records.create', $fond->id) }}" class="btn btn-primary btn-sm">Biên mục tài liệu</a>
-                                                <!-- Các nút khác như chỉnh sửa, xóa -->
                                             </td>
                                         </tr>
                                     @endforeach

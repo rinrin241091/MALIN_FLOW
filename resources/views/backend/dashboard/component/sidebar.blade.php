@@ -45,6 +45,14 @@
                     </li>   
                 </ul>
             </li>
+            <li class="{{ request()->routeIs('documents.*') ? 'active' : '' }}">
+                <a href="javascript:void(0)"><i class="fa fa-file-text"></i> <span class="nav-label">Quản lý tài liệu</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse {{ request()->routeIs('documents.*') ? 'in' : '' }}">
+                    <li class="{{ request()->routeIs('documents.index') ? 'active' : '' }}">
+                        <a href="{{ route('documents.index') }}">Danh sách tài liệu</a>
+                    </li>
+                </ul>
+            </li>
         </ul>
     </div>
 </nav>

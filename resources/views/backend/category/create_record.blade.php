@@ -23,68 +23,79 @@
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>Biên mục tài liệu cho phông: {{ $fond->name }}</h5>
+                    <h5>BIÊN MỤC TÀI LIỆU CHO PHÔNG: {{ $fond->name }}</h5>
                 </div>
                 <div class="ibox-content">
-                    <!-- Form nhập liệu thủ công -->
-                    <h3>Nhập liệu thủ công</h3>
-                    <form method="POST" action="{{ route('category.records.store', $fond->id) }}">
-                        @csrf
-                        <div class="form-group">
-                            <label for="title">Tiêu đề <span class="text-danger">*</span></label>
-                            <input type="text" name="title" id="title" class="form-control" value="{{ old('title') }}" required>
-                            @error('title')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#manual" role="tab">Nhập thủ công</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#excel" role="tab">Nhập từ Excel</a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <!-- Tab Nhập thủ công -->
+                        <div class="tab-pane active" id="manual" role="tabpanel">
+                            <div class="mt-4">
+                                <form action="{{ route('category.records.store', $fond->id) }}" method="POST">
+                                    @csrf
+                                    <div class="form-group">
+                                        <label for="title">Tiêu đề <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="title" name="title" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="author">Tác giả</label>
+                                        <input type="text" class="form-control" id="author" name="author">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="created_date">Ngày tạo</label>
+                                        <input type="date" class="form-control" id="created_date" name="created_date">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="description">Mô tả</label>
+                                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">Lưu</button>
+                                    <button type="reset" class="btn btn-secondary">Hủy</button>
+                                </form>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="author">Tác giả</label>
-                            <input type="text" name="author" id="author" class="form-control" value="{{ old('author') }}">
-                            @error('author')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
+                        <!-- Tab Nhập từ Excel -->
+                        <div class="tab-pane" id="excel" role="tabpanel">
+                            <div class="mt-4">
+                                <div class="alert alert-info">
+                                    <h5><i class="icon fas fa-info"></i> Hướng dẫn:</h5>
+                                    <p>File Excel cần có các cột sau:</p>
+                                    <ul>
+                                        <li>title (Tiêu đề) - Bắt buộc</li>
+                                        <li>author (Tác giả)</li>
+                                        <li>created_date (Ngày tạo)</li>
+                                        <li>description (Mô tả)</li>
+                                    </ul>
+                                </div>
 
-                        <div class="form-group">
-                            <label for="created_date">Ngày tạo</label>
-                            <input type="date" name="created_date" id="created_date" class="form-control" value="{{ old('created_date') }}">
-                            @error('created_date')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
+                                <form action="{{ route('category.records.import', $fond->id) }}" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="form-group">
+                                        <label for="excel_file">Chọn file Excel</label>
+                                        <input type="file" class="form-control-file" id="excel_file" name="excel_file" accept=".xlsx,.xls" required>
+                                    </div>
 
-                        <div class="form-group">
-                            <label for="description">Mô tả</label>
-                            <textarea name="description" id="description" class="form-control" rows="4">{{ old('description') }}</textarea>
-                            @error('description')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
+                                    <button type="submit" class="btn btn-success">Nhập dữ liệu</button>
+                                    <button type="reset" class="btn btn-secondary">Hủy</button>
+                                </form>
+                            </div>
                         </div>
-
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Lưu</button>
-                            <a href="{{ route('category.fonds') }}" class="btn btn-default">Hủy</a>
-                        </div>
-                    </form>
-
-                    <!-- Form nhập liệu từ Excel -->
-                    <h3>Nhập liệu từ Excel</h3>
-                    <form method="POST" action="{{ route('category.records.import', $fond->id) }}" enctype="multipart/form-data">
-                        @csrf
-                        <div class="form-group">
-                            <label for="excel_file">Chọn file Excel <span class="text-danger">*</span></label>
-                            <input type="file" name="excel_file" id="excel_file" class="form-control" accept=".xlsx, .xls" required>
-                            @error('excel_file')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Nhập dữ liệu</button>
-                            <a href="{{ route('category.fonds') }}" class="btn btn-default">Hủy</a>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
